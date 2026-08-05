@@ -1,0 +1,39 @@
+# OS / editor
+.DS_Store
+.idea
+.vscode
+
+# secrets / local env
+.env
+.env.*.local
+.env.local
+
+# apps/engine — Python
+apps/engine/__pycache__/
+apps/engine/**/__pycache__/
+apps/engine/*.pyc
+apps/engine/.venv/
+apps/engine/venv/
+apps/engine/*.egg-info/
+apps/engine/.pytest_cache/
+apps/engine/.mypy_cache/
+apps/engine/.ruff_cache/
+
+# apps/gateway — Go
+apps/gateway/bin/
+apps/gateway/*.exe
+apps/gateway/*.test
+
+# apps/web — Next.js / Node
+apps/web/node_modules/
+apps/web/.next/
+apps/web/out/
+apps/web/.turbo/
+apps/web/npm-debug.log*
+apps/web/yarn-error.log*
+
+# logs / coverage
+*.log
+coverage/
+.coverage
+htmlcov/
