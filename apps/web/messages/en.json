@@ -1,0 +1,186 @@
+{
+  "LandingPage": {
+    "heading1": "Can the beauty of music ",
+    "heading2": "be computed?",
+    "intro1": "Music that truly moves people usually carries several layers at once: precise rhythmic structure (the physical layer), rigorously considered arrangement logic (the structural layer), depth that confronts emotional ups and downs (the emotional layer), and dynamic tension held in balance (the vital layer).",
+    "intro2": "Computable Beauty tries to translate this four-dimensional aesthetic intuition into computable, verifiable dimensions.",
+    "cta": "Start Analyzing",
+    "frameworkLabel": "Four-Dimensional Aesthetic Framework"
+  },
+  "Nav": {
+    "analyze": "Analyze",
+    "history": "History"
+  },
+  "Step": {
+    "extracting": {
+      "label": "Acoustic Feature Extraction",
+      "detail": "Computes spectrum, beat grid, key/pitch distribution, and dynamic envelope from the waveform, producing the base feature vector for later analysis"
+    },
+    "classifying": {
+      "label": "Multi-Task Semantic Classification",
+      "detail": "Infers genre, valence/arousal, and instrumentation in parallel, while detecting chord progressions, key, and section boundaries"
+    },
+    "scoring": {
+      "label": "Four-Dimensional Aesthetic Scoring",
+      "detail": "Quantifies physical precision, structural logic, emotional depth, and vital tension based on the acoustic and classification results, combining them into an overall aesthetic index"
+    },
+    "explaining": {
+      "label": "AI Evidence-Based Interpretation",
+      "detail": "An LLM generates a written analysis grounded in the structured output of the previous layers, with every conclusion traceable back to a specific metric"
+    }
+  },
+  "Analyze": {
+    "defaultTitle": "this track",
+    "skipped": " (skipped)",
+    "viewResult": "View Result",
+    "viewLater": "View Later",
+    "reupload": "Re-upload",
+    "retryLater": "Retry Later",
+    "queuedPrefix": "Queued: ",
+    "analyzingPrefix": "Analyzing: ",
+    "queuePosition": "{position} ahead in queue",
+    "explanationSkippedReason": "Skipped: OPENAI_API_KEY not configured",
+    "uploadFailed": "Upload failed",
+    "fetchDemoFailed": "Failed to fetch demo tracks",
+    "submitDemoFailed": "Failed to submit demo track",
+    "heading": "Upload a piece of music, deconstruct its beauty",
+    "formatHint": "Supports MP3 · WAV · FLAC · OGG, up to 1GB",
+    "chooseFile": "Choose Audio File",
+    "loading": "Loading…",
+    "collapseDemos": "Hide Built-in Tracks",
+    "useDemos": "Use Built-in Tracks"
+  },
+  "History": {
+    "backToAnalyze": "Back to Analyze",
+    "firstPage": "First",
+    "lastPage": "Last",
+    "pageOption": "Page {page}"
+  },
+  "Recent": {
+    "recentAnalyses": "Recent Analyses",
+    "historyLink": "History",
+    "empty": "No completed analyses yet",
+    "historyTitle": "History ({total} total)"
+  },
+  "RelativeTime": {
+    "justNow": "just now",
+    "minutes": "{value} minutes ago",
+    "hours": "{value} hours ago",
+    "yesterday": "yesterday",
+    "days": "{value} days ago"
+  },
+  "Chat": {
+    "followUp": "Ask a follow-up",
+    "askFailed": "Failed to get an answer",
+    "placeholder": "Why does this track sound good?",
+    "thinking": "Thinking…",
+    "send": "Send"
+  },
+  "Tabs": {
+    "overview": "Overview",
+    "structure": "Structure",
+    "emotionArc": "Emotion",
+    "aesthetic": "Aesthetic",
+    "aiExplain": "AI Analysis"
+  },
+  "Result": {
+    "aestheticIndex": "Aesthetic Index",
+    "aestheticDimensions": "Aesthetic Dimensions",
+    "computationMethod": "How it's computed: ",
+    "aiNotConfigured": "OPENAI_API_KEY is not configured — this feature is unavailable",
+    "aiInterpretation": "AI Interpretation",
+    "verified": "Verified",
+    "artist": "Artist",
+    "unknownArtist": "Unknown",
+    "duration": "Duration",
+    "analysisDuration": "Analysis Time",
+    "beat": "Time Signature",
+    "key": "Key",
+    "instruments": "Instruments",
+    "genre": "Genre",
+    "mood": "Mood",
+    "emotionDimensions": "Emotion Dimensions",
+    "structureSegments": "Structure Segments",
+    "segmentCount": "{count} segments",
+    "chordProgression": "Chord Progression",
+    "analysisFailed": "Analysis Failed",
+    "retryUploadHint": "Please try uploading again",
+    "stillQueued": "Still Queued",
+    "connectionLost": "Connection lost — click to check progress again",
+    "reconnect": "Reconnect",
+    "analyzingTrack": "Analyzing {title}",
+    "queuedWaiting": "Waiting in queue…",
+    "uploadedWaitEstimate": "Upload complete — analysis usually takes about a minute",
+    "exportJson": "Export JSON",
+    "copied": "Copied",
+    "shareLink": "Share Link",
+    "toolCallCount": "{count, plural, one {# tool call} other {# tool calls}}",
+    "emotionArc": "Emotional Arc — AROUSAL · VALENCE"
+  },
+  "AestheticDimension": {
+    "physical_precision": {
+      "label": "Physical",
+      "fullLabel": "Physical Layer",
+      "description": "Quantifies the physical precision of performance and production from signal features like tempo stability, spectral energy distribution, and dynamic range."
+    },
+    "structural_logic": {
+      "label": "Logic",
+      "fullLabel": "Structural Layer",
+      "description": "Measures whether the music's structure forms a coherent whole, based on harmonic progression patterns, section duration ratios, and tonal stability."
+    },
+    "emotional_depth": {
+      "label": "Emotion",
+      "fullLabel": "Emotional Layer",
+      "description": "Measures the completeness of emotional movement from the peak-to-valley range of the emotional arc, the number of polarity shifts, and the dispersion of arousal."
+    },
+    "vital_tension": {
+      "label": "Vitality",
+      "fullLabel": "Vital Layer",
+      "description": "Measures the intensity of tension between opposing elements from loudness dynamic contrast, the frequency of energy shifts, and the proportion of dissonant harmonic intervals."
+    }
+  },
+  "EvidenceLabel": {
+    "tempo_stability": "Tempo Stability (BPM variance, lower = more stable)",
+    "frequency_balance": "Spectral Balance (low/mid/high frequency energy ratio, more balanced = higher)",
+    "dynamic_range_db": "Loudness Envelope Range (difference between max and min RMS, in dB)",
+    "spectral_entropy": "Timbre Complexity Proxy (mean entropy of the mel spectrogram, higher = richer)",
+    "tsd_coverage": "T-S-D Function Coverage (chord sequence analysis, higher = more conventional)",
+    "segment_balance": "Section Duration Balance (structural segment durations, closer to 1 = more balanced)",
+    "key_stability": "Key Change Frequency & Resolution (tonal analysis, higher = more stable)",
+    "valence_delta": "Emotional Arc Range (difference between the arc's max and min)",
+    "polarity_switches": "Emotional Polarity Shift Density (positive/negative flips between adjacent frames)",
+    "arousal_std": "Arousal Dispersion (standard deviation of arousal values)",
+    "high_arousal_ratio": "High-Arousal Duration Ratio (share of segments with arousal above 0.6)",
+    "dynamic_contrast": "Loudness Dynamic Contrast (ratio of the loudest to the quietest section's RMS)",
+    "burst_density": "Energy Burst Frequency (number of local onset-strength maxima, per minute)",
+    "silence_burst_ratio": "Silence-to-Burst Ratio (silent frame duration vs. high-energy frame duration)",
+    "dissonance_ratio": "Harmonic Tension (proportion of dissonant chord intervals)"
+  },
+  "EmotionDimension": {
+    "arousal": {
+      "label": "Arousal",
+      "description": "The activation intensity dimension of emotion, reflecting the level of psychophysiological arousal — higher values indicate stronger physiological activation and alertness; lower values trend toward calm and relaxed.",
+      "computation": "Jointly predicted by the emotion recognition model from acoustic features such as timbre, pitch, loudness, and rhythm."
+    },
+    "valence": {
+      "label": "Valence",
+      "description": "The positive/negative polarity dimension of emotion, representing how pleasant the emotional experience is — positive values correspond to a positive, pleasant emotional tone, negative values to a negative, low tone, with 0 being neutral.",
+      "computation": "Shares the same acoustic features as arousal, jointly predicted by the same model."
+    },
+    "tension": {
+      "label": "Tension",
+      "description": "The sense of instability and unresolvedness the music accumulates over time — higher values sound more suspended, anticipating resolution.",
+      "computation": "Derived from the overall output of the emotion recognition model; a standalone quantification method is still being refined."
+    },
+    "release": {
+      "label": "Release",
+      "description": "The sense of stability and closure once tension resolves — higher values indicate tension has been fully released, sounding settled and relaxed.",
+      "computation": "Derived from the overall output of the emotion recognition model; a standalone quantification method is still being refined."
+    },
+    "energy": {
+      "label": "Energy",
+      "description": "The overall drive and intensity of the music, jointly reflecting rhythmic density, dynamics, and timbre — higher values indicate stronger momentum and impact.",
+      "computation": "Derived from the overall output of the emotion recognition model; a standalone quantification method is still being refined."
+    }
+  }
+}

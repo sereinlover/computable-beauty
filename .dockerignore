@@ -1,0 +1,27 @@
+# apps/gateway, apps/engine, and apps/web's Dockerfiles all use the repo root
+# as their build context (see docker-compose.base.yml), so this file applies to all three.
+
+# Python virtual environments — host-specific binaries and an editable-install
+# .pth file with the host's absolute path baked in. A fresh venv is always
+# built inside the image (see apps/engine/Dockerfile), never copied in.
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+
+# Go build output from local `make build`/`go build`.
+apps/gateway/bin
+
+# Node.js / Next.js build output — apps/web/Dockerfile builds node_modules and
+# .next fresh inside the image, never copies the host's.
+**/node_modules
+apps/web/.next
+
+# Version control and local secrets.
+.git
+.env
+.env.*
+!.env.example
+
+# User-uploaded audio — never part of a build.
+data/uploads

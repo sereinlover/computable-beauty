@@ -1,0 +1,52 @@
+[project]
+name = "engine"
+version = "0.1.0"
+description = "Python AI engine — L1-L4 audio analysis: feature extraction, classification, aesthetic scoring, and LLM-based Harness interpretation."
+requires-python = ">=3.12"
+dependencies = [
+    "contracts",
+    "fastapi>=0.139.0",
+    "librosa>=0.11.0",
+    "numpy>=2.4.6",
+    "openai>=2.45.0",
+    "python-dotenv>=1.2.2",
+    "python-multipart>=0.0.32",
+    "scipy>=1.18.0",
+    "soundfile>=0.14.0",
+    "torch>=2.13.0",
+    "uvicorn[standard]>=0.51.0",
+]
+
+[tool.uv.sources]
+contracts = { path = "../../contracts", editable = true }
+# The Linux container has no GPU, but PyPI's default torch wheel bundles a full
+# CUDA runtime (cuBLAS/cuDNN/NCCL, etc.), adding several GB for nothing. Only
+# override the index on Linux to PyTorch's official CPU-only wheels; macOS stays
+# on the default PyPI resolution (which never bundled CUDA to begin with).
+torch = [
+    { index = "pytorch-cpu", marker = "sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.14.0",
+]
+
+# Without this, pytest only adds tests/'s own directory to sys.path by default,
+# so it can't find apps/engine/'s root-level harness/, auth.py, etc.
+[tool.pytest.ini_options]
+pythonpath = ["."]
+filterwarnings = [
+    # audioread (librosa's mp3 decode fallback) imports these stdlib modules,
+    # slated for removal in Python 3.13 (PEP 594) — not something we can fix here.
+    "ignore::DeprecationWarning:audioread.*",
+]
+
+[tool.ruff]
+line-length = 140

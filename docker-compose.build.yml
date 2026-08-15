@@ -1,0 +1,18 @@
+# Build-from-source variant of docker-compose.base.yml — adds `build` for
+# engine/gateway/web. Passed with an explicit -f (see deploy-build.sh);
+# mutually exclusive with docker-compose.pull.yml, never combine both.
+services:
+  engine:
+    build:
+      context: .
+      dockerfile: apps/engine/Dockerfile
+
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile

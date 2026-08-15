@@ -3,15 +3,17 @@
 .idea
 .vscode
 
-# secrets / local env
+# ignore every .env.<suffix> variant except the committed template.
 .env
-.env.*.local
-.env.local
+.env.*
+!.env.example
+
+# Python — unscoped so it also covers contracts/'s own package, not just
+# apps/engine/ (a leading-slash-less pattern matches at any depth).
+__pycache__/
+*.pyc
 
 # apps/engine — Python
-apps/engine/__pycache__/
-apps/engine/**/__pycache__/
-apps/engine/*.pyc
 apps/engine/.venv/
 apps/engine/venv/
 apps/engine/*.egg-info/
@@ -24,6 +26,10 @@ apps/gateway/bin/
 apps/gateway/*.exe
 apps/gateway/*.test
 
+# Uploaded audio Gateway writes to disk in local dev (matches the /data/uploads
+# shared volume used in the containerized deployment).
+/data/uploads/
+
 # apps/web — Next.js / Node
 apps/web/node_modules/
 apps/web/.next/
@@ -34,6 +40,12 @@ apps/web/yarn-error.log*
 
 # logs / coverage
 *.log
+/logs/
 coverage/
 .coverage
 htmlcov/
+
+# Symlinks into ../computable-beauty-notes (separate private repo, not pushed here)
+/CLAUDE.md
+/doc
+/articles

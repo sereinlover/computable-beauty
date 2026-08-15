@@ -1,6 +1,9 @@
-# 本地基础设施：只起 postgres + redis，供本地开发使用。
-# 用法：docker compose -f docker-compose.dev.yml up -d
-# 三服务全部就绪后改用根目录 docker-compose.yml。
+# Local dev: only postgres + redis run in Docker; engine/gateway/web run
+# directly on the host.
+#
+# Usage: docker compose -f docker-compose.dev.yml up -d postgres redis
+
+name: computable-beauty-dev
 
 services:
   postgres:
@@ -8,12 +11,12 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=cb
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=computable_beauty
+    env_file: .env.local
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # Hardcoded cb/computable_beauty, not ${POSTGRES_USER}/${POSTGRES_DB}:
+    # Compose substitutes ${VAR} from a literal ".env" file regardless of
+    # env_file, which isn't .env.local (the file this actually uses).
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U cb -d computable_beauty"]
       interval: 5s

@@ -1,0 +1,76 @@
+# Base compose file — always used with an explicit -f for either
+# docker-compose.build.yml or docker-compose.pull.yml (never both), which
+# supply engine/gateway/web's missing `build`/`image`.
+#
+# Port vars, one per service — deploy-common.sh bumps the value on
+# conflict and persists it into .env, so both sides read the same number.
+#   - engine/gateway/web: the var is on *both* sides of "ports:" since the app
+#     itself reads it to bind — bumping it moves the real listen port, so
+#     deploy-common.sh also rewrites ENGINE_URL/GATEWAY_URL to match.
+#   - postgres/redis: host side only — these images always listen on their
+#     standard port inside the container, so DATABASE_URL/REDIS_URL don't change.
+services:
+  engine:
+    ports:
+      - "${ENGINE_PORT:-8000}:${ENGINE_PORT:-8000}"
+    env_file: .env
+    volumes:
+      - ./contracts:/app/contracts:ro
+      - uploads:/data/uploads
+
+  gateway:
+    ports:
+      - "${GATEWAY_PORT:-8080}:${GATEWAY_PORT:-8080}"
+    env_file: .env
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      engine:
+        condition: service_started
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  web:
+    ports:
+      - "${WEB_PORT:-3000}:${WEB_PORT:-3000}"
+    env_file: .env
+    environment:
+      # Next's standalone server reads PORT; the Dockerfile only bakes
+      # PORT=3000 as the image's default, so this must win at runtime.
+      PORT: "${WEB_PORT:-3000}"
+    depends_on:
+      - gateway
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cb -d computable_beauty"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  uploads:
+  postgres_data:
+  redis_data:

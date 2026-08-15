@@ -1,0 +1,13 @@
+# Prebuilt-image variant of docker-compose.base.yml — adds `image` for
+# engine/gateway/web, pulling from ghcr.io (built by .github/workflows/
+# ci.yml's publish job). Passed with an explicit -f (see deploy-pull.sh);
+# mutually exclusive with docker-compose.build.yml, never combine both.
+services:
+  engine:
+    image: ghcr.io/sereinlover/computable-beauty-engine:latest
+
+  gateway:
+    image: ghcr.io/sereinlover/computable-beauty-gateway:latest
+
+  web:
+    image: ghcr.io/sereinlover/computable-beauty-web:latest

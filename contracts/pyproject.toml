@@ -1,0 +1,15 @@
+# Python sources live under contracts/contracts/ (same name as the project),
+# hatchling's standard flat-layout that it picks up with no extra config.
+# types.go / types.ts stay in the outer directory, unrelated to the Python
+# package layout.
+
+[project]
+name = "contracts"
+version = "0.1.0"
+description = "Shared layer-to-layer type contracts (Python side) — see types.go / types.ts for the other two languages."
+requires-python = ">=3.12"
+dependencies = ["numpy>=1.26.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

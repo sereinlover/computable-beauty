@@ -1,0 +1,186 @@
+{
+  "LandingPage": {
+    "heading1": "音乐的美，",
+    "heading2": "可以被计算吗？",
+    "intro1": "真正打动人的音乐，往往同时装下好几层：精确的节奏结构（物理层）、严谨考究的编曲逻辑（结构层）、直面情绪起伏的深度（情感层）、张弛分明的生命张力（生命层）。",
+    "intro2": "Computable Beauty 试图把这种四维美学的直觉翻译成可计算、可验证的维度。",
+    "cta": "开始分析",
+    "frameworkLabel": "四维美学框架"
+  },
+  "Nav": {
+    "analyze": "分析",
+    "history": "历史"
+  },
+  "Step": {
+    "extracting": {
+      "label": "声学特征提取",
+      "detail": "从音频波形中计算频谱、节拍网格、调式音高分布与动态包络，生成后续分析的基础特征向量"
+    },
+    "classifying": {
+      "label": "多任务语义分类",
+      "detail": "并行推理流派归属、情感效价与唤醒度、乐器构成；同步检测和弦进行、调式与段落边界"
+    },
+    "scoring": {
+      "label": "四维美学评分",
+      "detail": "基于声学指标与分类结果，量化物理精确性、结构逻辑、情感深度、生命张力四个维度，合成综合美学指数"
+    },
+    "explaining": {
+      "label": "AI 循证解读",
+      "detail": "以前序各层的结构化输出为证据，由语言模型生成与数据严格对应的文字分析，每项结论均可回溯至具体指标"
+    }
+  },
+  "Analyze": {
+    "defaultTitle": "这段音乐",
+    "skipped": "（跳过）",
+    "viewResult": "查看结果",
+    "viewLater": "稍后查看",
+    "reupload": "重新上传",
+    "retryLater": "稍后重试",
+    "queuedPrefix": "正在排队：",
+    "analyzingPrefix": "正在分析：",
+    "queuePosition": "前面还有 {position} 首",
+    "explanationSkippedReason": "已跳过：未配置 OPENAI_API_KEY",
+    "uploadFailed": "上传失败",
+    "fetchDemoFailed": "获取 Demo 曲目失败",
+    "submitDemoFailed": "提交 Demo 曲目失败",
+    "heading": "上传一段音乐，解构它的美",
+    "formatHint": "支持 MP3 · WAV · FLAC · OGG，最大 1GB",
+    "chooseFile": "选择音乐文件",
+    "loading": "加载中…",
+    "collapseDemos": "收起内置音乐",
+    "useDemos": "使用内置音乐"
+  },
+  "History": {
+    "backToAnalyze": "返回分析",
+    "firstPage": "首页",
+    "lastPage": "尾页",
+    "pageOption": "第 {page} 页"
+  },
+  "Recent": {
+    "recentAnalyses": "最近分析",
+    "historyLink": "历史分析",
+    "empty": "还没有已完成的分析",
+    "historyTitle": "历史分析（共 {total} 条）"
+  },
+  "RelativeTime": {
+    "justNow": "刚刚",
+    "minutes": "{value} 分钟前",
+    "hours": "{value} 小时前",
+    "yesterday": "昨天",
+    "days": "{value} 天前"
+  },
+  "Chat": {
+    "followUp": "继续追问",
+    "askFailed": "追问失败",
+    "placeholder": "这首歌为什么好听？",
+    "thinking": "思考中…",
+    "send": "发送"
+  },
+  "Tabs": {
+    "overview": "概览",
+    "structure": "结构分析",
+    "emotionArc": "情感分析",
+    "aesthetic": "美学分析",
+    "aiExplain": "AI 分析"
+  },
+  "Result": {
+    "aestheticIndex": "美学指数",
+    "aestheticDimensions": "美学四维",
+    "computationMethod": "计算方式：",
+    "aiNotConfigured": "尚未配置 OPENAI_API_KEY，该功能不可用",
+    "aiInterpretation": "AI 解读",
+    "verified": "已校验",
+    "artist": "艺术家",
+    "unknownArtist": "未知",
+    "duration": "时长",
+    "analysisDuration": "分析耗时",
+    "beat": "节拍",
+    "key": "调性",
+    "instruments": "乐器",
+    "genre": "风格",
+    "mood": "情绪",
+    "emotionDimensions": "情感维度",
+    "structureSegments": "结构分段",
+    "segmentCount": "{count} 段",
+    "chordProgression": "和弦进行",
+    "analysisFailed": "分析失败",
+    "retryUploadHint": "请重新上传试试",
+    "stillQueued": "还在排队中",
+    "connectionLost": "连接暂时断开了，点击重新查看进度",
+    "reconnect": "重新连接",
+    "analyzingTrack": "正在分析 {title}",
+    "queuedWaiting": "排队等待中…",
+    "uploadedWaitEstimate": "上传已完成，分析通常需要一分钟左右",
+    "exportJson": "JSON 导出",
+    "copied": "已复制",
+    "shareLink": "分享链接",
+    "toolCallCount": "{count} 项工具调用",
+    "emotionArc": "情感弧线 — AROUSAL · VALENCE"
+  },
+  "AestheticDimension": {
+    "physical_precision": {
+      "label": "物理",
+      "fullLabel": "物理层",
+      "description": "从节拍稳定性、频谱能量分布、动态范围等信号特征，量化演奏与制作在物理层面的精确程度。"
+    },
+    "structural_logic": {
+      "label": "逻辑",
+      "fullLabel": "结构层",
+      "description": "从和声功能的进行方式、段落时长比例、调性稳定性，衡量音乐结构是否构成自洽的整体。"
+    },
+    "emotional_depth": {
+      "label": "情感",
+      "fullLabel": "情感层",
+      "description": "从情感弧线的峰谷落差、极性转折次数、唤醒度的离散程度，衡量情绪起伏的完整程度。"
+    },
+    "vital_tension": {
+      "label": "生命",
+      "fullLabel": "生命层",
+      "description": "从响度的动态对比、能量突变的频率、和声不协和音程的比例，衡量对立元素之间的张力强度。"
+    }
+  },
+  "EvidenceLabel": {
+    "tempo_stability": "节拍稳定性（BPM 方差，越低越稳）",
+    "frequency_balance": "频谱分布均匀度（低/中/高频能量比，越均衡越高）",
+    "dynamic_range_db": "响度包络变化幅度（RMS 最大值与最小值之差，单位 dB）",
+    "spectral_entropy": "音色复杂度代理（mel 频谱平均信息熵，越高越丰富）",
+    "tsd_coverage": "T-S-D 功能进行覆盖比例（和弦序列分析，越高越合规范）",
+    "segment_balance": "各段时长分布均衡度（结构分段时长，越接近 1 越均衡）",
+    "key_stability": "转调频率与解决情况（调性分析，越高越稳定）",
+    "valence_delta": "情感弧线峰谷落差（弧线最大值与最小值之差）",
+    "polarity_switches": "情绪极性转折密度（相邻帧正负翻转次数）",
+    "arousal_std": "唤醒度离散程度（唤醒度数值的标准差）",
+    "high_arousal_ratio": "高唤醒段落时长比（唤醒度超过 0.6 的片段占比）",
+    "dynamic_contrast": "响度动态对比（RMS 最强段 / 最弱段比值）",
+    "burst_density": "能量突变频率（onset 局部极大值数，次/分钟）",
+    "silence_burst_ratio": "沉默与爆发交替比（静音帧 / 高能帧时长比）",
+    "dissonance_ratio": "谐波张力（和弦不协和音程比例）"
+  },
+  "EmotionDimension": {
+    "arousal": {
+      "label": "唤醒度（Arousal）",
+      "description": "情感的激活强度维度，反映心理生理唤起水平的高低——数值越高，代表越强的生理激活与警觉状态；越低则趋于平静松弛。",
+      "computation": "基于音频的音色、音高、响度、节奏等声学特征，由情感识别模型联合预测得出。"
+    },
+    "valence": {
+      "label": "效价（Valence）",
+      "description": "情感的正负极性维度，表征情绪体验的愉悦程度——正值对应积极、愉悦的情感基调，负值对应消极、低落的情感基调，0 为中性。",
+      "computation": "与唤醒度共享同一套声学特征，由同一模型联合预测得出。"
+    },
+    "tension": {
+      "label": "张力（Tension）",
+      "description": "音乐在时间维度上积累的不稳定感与未解决感——数值越高，听感上越倾向于悬而未决、期待被解决的紧张状态。",
+      "computation": "由情感识别模型的整体输出综合推导，独立的量化方法仍在持续优化中。"
+    },
+    "release": {
+      "label": "释放度（Release）",
+      "description": "张力得到解决后的稳定感与终止感——数值越高，代表情感张力已充分释放，听感趋于落定与松弛。",
+      "computation": "由情感识别模型的整体输出综合推导，独立的量化方法仍在持续优化中。"
+    },
+    "energy": {
+      "label": "能量度（Energy）",
+      "description": "音乐整体的驱动力与强度，综合反映节奏密度、力度与音色的复合作用——数值越高，代表越强的动能与冲击力。",
+      "computation": "由情感识别模型的整体输出综合推导，独立的量化方法仍在持续优化中。"
+    }
+  }
+}

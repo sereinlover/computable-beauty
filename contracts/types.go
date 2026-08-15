@@ -93,55 +93,71 @@ type ToolCallRecord struct {
 }
 
 type AnalysisResult struct {
-	AudioID               string              `json:"audio_id"`
-	Verified              bool                `json:"verified"`
-	ToolCallCount         int                 `json:"tool_call_count"`
-	ToolCallLog           []ToolCallRecord    `json:"tool_call_log"`
-	Aesthetic             AestheticBundle     `json:"aesthetic"`
-	Understanding         UnderstandingBundle `json:"understanding"`
-	FeatureSummary        FeatureSummary      `json:"feature_summary"`
-	Summary               string              `json:"summary"`
-	Explanation           string              `json:"explanation"`
-	ConversationContextID string              `json:"conversation_context_id"`
+	AudioID            string              `json:"audio_id"`
+	Verified           bool                `json:"verified"`
+	ToolCallCount      int                 `json:"tool_call_count"`
+	ToolCallLog        []ToolCallRecord    `json:"tool_call_log"`
+	Aesthetic          AestheticBundle     `json:"aesthetic"`
+	Understanding      UnderstandingBundle `json:"understanding"`
+	FeatureSummary     FeatureSummary      `json:"feature_summary"`
+	Summary            string              `json:"summary"`
+	Explanation        string              `json:"explanation"`
+	ExplanationSkipped bool                `json:"explanation_skipped"` // true if no OPENAI_API_KEY was configured — Summary/Explanation are ""
 }
 
 // ─── Job ──────────────────────────────────────────────────────────────────────
 
+// JobStatus covers both jobs.status's coarse lifecycle (pending/processing/
+// done/failed) and SSE's finer-grained pipeline steps (extracting/
+// classifying/scoring/explaining/explain_skipped) — one vocabulary instead
+// of two, since "done"/"failed" mean the same thing in both.
 type JobStatus string
 
 const (
-	JobStatusPending    JobStatus = "pending"
-	JobStatusProcessing JobStatus = "processing"
-	JobStatusDone       JobStatus = "done"
-	JobStatusFailed     JobStatus = "failed"
+	JobStatusPending        JobStatus = "pending"
+	JobStatusProcessing     JobStatus = "processing"
+	JobStatusExtracting     JobStatus = "extracting"
+	JobStatusClassifying    JobStatus = "classifying"
+	JobStatusScoring        JobStatus = "scoring"
+	JobStatusExplaining     JobStatus = "explaining"
+	JobStatusExplainSkipped JobStatus = "explain_skipped" // no OPENAI_API_KEY configured — pipeline.go skips calling Engine's /internal/explain
+	JobStatusDone           JobStatus = "done"
+	JobStatusFailed         JobStatus = "failed"
 )
 
+// Job's fields are always present in JSON (no omitempty) so apps/web has one
+// shape to read regardless of status — fields not yet meaningful (e.g.
+// Result before status=done) serialize as the zero value (null/"") rather
+// than being absent.
 type Job struct {
 	ID                  string          `json:"id"`
 	Status              JobStatus       `json:"status"`
-	Result              *AnalysisResult `json:"result,omitempty"`
-	Error               string          `json:"error,omitempty"`
-	AnalysisDurationSec *float64        `json:"analysis_duration_sec,omitempty"`
-	CreatedAt           string          `json:"created_at,omitempty"` // ISO 8601; omitempty allows partial Job in POST response
-	Title               string          `json:"title,omitempty"`      // from ID3 tag or filename
-	Artist              string          `json:"artist,omitempty"`     // from ID3 tag
+	Result              *AnalysisResult `json:"result"`
+	Error               string          `json:"error"`
+	AnalysisDurationSec *float64        `json:"analysis_duration_sec"`
+	CreatedAt           string          `json:"created_at"` // ISO 8601
+	Title               string          `json:"title"`      // from ID3 tag or filename
+	Artist              string          `json:"artist"`     // from ID3 tag
 }
 
 // ─── Chat ─────────────────────────────────────────────────────────────────────
 
+// ChatRequest carries the question and which language to answer in — the
+// analysis context to answer against is looked up server-side from the job
+// (identified by {id} in the URL path) that produced it, not supplied by the
+// client. Language is "zh" | "en", matching apps/web's LanguageToggle.
 type ChatRequest struct {
-	Question              string `json:"question"`
-	ConversationContextID string `json:"conversation_context_id"`
+	Question string `json:"question"`
+	Language string `json:"language"`
 }
 
 type ChatResponse struct {
-	Answer                string `json:"answer"`
-	ConversationContextID string `json:"conversation_context_id"`
+	Answer string `json:"answer"`
 }
 
-// ─── History ──────────────────────────────────────────────────────────────────
+// ─── Job list ─────────────────────────────────────────────────────────────────
 
-type HistoryResponse struct {
+type ListJobResponse struct {
 	Items []Job `json:"items"`
 	Total int   `json:"total"`
 }
@@ -149,7 +165,22 @@ type HistoryResponse struct {
 // ─── SSE ──────────────────────────────────────────────────────────────────────
 
 type SSEEvent struct {
-	Step     string  `json:"step"`
-	Message  string  `json:"message,omitempty"`
-	Progress float64 `json:"progress,omitempty"` // 0.0 ~ 1.0
+	Step          JobStatus `json:"step"`
+	Message       string    `json:"message,omitempty"`
+	Progress      float64   `json:"progress,omitempty"`        // 0.0 ~ 1.0
+	RetryAfterSec int       `json:"retry_after_sec,omitempty"` // step=timeout only: reconnect after this many seconds
+}
+
+// ─── Demo tracks ──────────────────────────────────────────────────────────────
+
+type DemoTrack struct {
+	ID          string  `json:"id"`
+	Title       string  `json:"title"`
+	Artist      string  `json:"artist"`
+	DurationSec float64 `json:"duration_sec"`
+	AudioURL    string  `json:"audio_url"`
+}
+
+type DemoTracksResponse struct {
+	Tracks []DemoTrack `json:"tracks"`
 }

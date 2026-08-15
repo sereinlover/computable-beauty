@@ -97,39 +97,57 @@ export interface AnalysisResult {
   feature_summary: FeatureSummary;
   summary: string;
   explanation: string;
-  conversation_context_id: string;
+  explanation_skipped: boolean; // true if no OPENAI_API_KEY was configured — summary/explanation are ""
 }
 
 // ─── Job ──────────────────────────────────────────────────────────────────────
 
-export type JobStatus = "pending" | "processing" | "done" | "failed";
+// Covers both jobs.status's coarse lifecycle (pending/processing/done/failed)
+// and SSE's finer-grained pipeline steps (extracting/classifying/scoring/
+// explaining/explain_skipped) — one vocabulary instead of two, since
+// "done"/"failed" mean the same thing in both.
+export type JobStatus =
+  | "pending"
+  | "processing"
+  | "extracting"
+  | "classifying"
+  | "scoring"
+  | "explaining"
+  | "explain_skipped" // no OPENAI_API_KEY configured — pipeline.go skips calling Engine's /internal/explain
+  | "done"
+  | "failed";
 
+// Fields are always present (no optional `?:`) so apps/web has one shape to
+// read regardless of status — fields not yet meaningful (e.g. result before
+// status=done) are null/"" rather than absent.
 export interface Job {
   id: string;
   status: JobStatus;
-  result?: AnalysisResult;
-  error?: string;
-  analysis_duration_sec?: number;
-  created_at?: string;    // ISO 8601; optional allows partial Job in POST response
-  title?: string;         // from ID3 tag or filename
-  artist?: string;        // from ID3 tag
+  result: AnalysisResult | null;
+  error: string;
+  analysis_duration_sec: number | null;
+  created_at: string; // ISO 8601
+  title: string;       // from ID3 tag or filename
+  artist: string;      // from ID3 tag
 }
 
 // ─── Chat ─────────────────────────────────────────────────────────────────────
 
+// The analysis context to answer the question against is looked up
+// server-side from the job (identified by {id} in the URL path) that
+// produced it, not supplied by the client.
 export interface ChatRequest {
   question: string;
-  conversation_context_id: string;
+  language: "zh" | "en";
 }
 
 export interface ChatResponse {
   answer: string;
-  conversation_context_id: string;
 }
 
-// ─── History ──────────────────────────────────────────────────────────────────
+// ─── Job list ─────────────────────────────────────────────────────────────────
 
-export interface HistoryResponse {
+export interface ListJobResponse {
   items: Job[];
   total: number;
 }
@@ -137,7 +155,22 @@ export interface HistoryResponse {
 // ─── SSE ──────────────────────────────────────────────────────────────────────
 
 export interface SSEEvent {
-  step: string;
+  step: JobStatus;
   message?: string;
-  progress?: number; // 0.0 ~ 1.0
+  progress?: number;         // 0.0 ~ 1.0
+  retry_after_sec?: number;  // step=timeout only: reconnect after this many seconds
+}
+
+// ─── Demo tracks ──────────────────────────────────────────────────────────────
+
+export interface DemoTrack {
+  id: string;
+  title: string;
+  artist: string;
+  duration_sec: number;
+  audio_url: string;
+}
+
+export interface DemoTracksResponse {
+  tracks: DemoTrack[];
 }
