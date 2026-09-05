@@ -7,9 +7,15 @@ package biz
 
 import (
 	"context"
+	"errors"
 
 	"github.com/computable-beauty/contracts"
 )
+
+// ErrEngineUnreachable marks a transport-level EngineClient failure (the
+// HTTP round trip never completed) rather than Engine rejecting the request
+// for a real reason. Worker requeues these instead of failing the job.
+var ErrEngineUnreachable = errors.New("engine unreachable")
 
 // JobStore reads and writes the jobs table, implemented by JobPostgresStore
 // (internal/data/job.go). GetJob/ListJob query jobs LEFT JOIN analyses, but
@@ -28,6 +34,12 @@ type JobStore interface {
 	// NextJob returns the oldest pending job (created_at ASC); found=false
 	// when the queue is empty.
 	NextJob(ctx context.Context) (job JobRecord, found bool, err error)
+	// RequeueStuckJobs resets every status=processing row back to pending.
+	// Only one Worker goroutine ever holds that status, so any row still
+	// processing at startup is an orphan from a process that died or
+	// restarted mid-job — NextJob only selects pending, so nothing else
+	// would ever move it. Returns each reset row's title for logging.
+	RequeueStuckJobs(ctx context.Context) (titles []string, err error)
 }
 
 // AnalysisStore reads and writes the analyses table, implemented by

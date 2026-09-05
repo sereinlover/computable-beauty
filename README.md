@@ -1,21 +1,21 @@
 <!-- TODO: drop the cover image at assets/cover.png -->
 <div align=center><img src="assets/cover.jpg" width="256px;" alt="Computable Beauty"></div>
-<p align='center'>Can the beauty of music be computed?<br>Upload a piece of music, and translate the physical, structural, emotional, and vital layers of aesthetic intuition into computable, verifiable dimensions.</p>
+<p align='center'>Can the beauty of music be computed?<br>Upload a piece of music, and translate its precise rhythmic structure (the physical layer), rigorously considered arrangement logic (the structural layer), depth that confronts emotional ups and downs (the emotional layer), and energy that rises and falls in balance (the vitality layer) into computable dimensions.</p>
 
 ## README 🌍
 - [ [English](./README.md) ] | [ [简体中文](./README_ZH.md) ]
 
-## Demo 🎵
+## Product Showcase 🎵
 
-> TODO: demo video placeholder
+https://github.com/user-attachments/assets/d83a1bd6-397e-4c5d-8e3d-a3bf3465b7dd
 
 ## Product Introduction ❤️
 
 ### Overview
 - Computable Beauty is an AI music aesthetics analysis system: upload a piece of music (MP3/WAV/FLAC/OGG) and it runs a four-layer analysis pipeline:
   1. **Acoustic feature extraction** — computes spectrum, beat grid, key/pitch distribution, and dynamic envelope from the waveform, producing the base feature vector
-  2. **Multi-task semantic classification** — infers genre, valence/arousal, and instrumentation in parallel, while detecting chord progressions, key, and section boundaries
-  3. **Four-dimensional aesthetic scoring** — quantifies physical precision, structural logic, emotional depth, and vital tension based on the acoustic and classification results, and combines them into an overall aesthetic index
+  2. **Multi-task semantic classification** — infers genre, valence/arousal, and instrumentation in parallel, while detecting chord progressions and section boundaries
+  3. **Four-dimensional aesthetic scoring** — independently quantifies physical precision, structural logic, emotional depth, and vital tension based on the acoustic and classification results; the four dimensions are shown independently, with no combined score
   4. **AI evidence-based interpretation** — an LLM generates a written analysis grounded in the structured output of the previous layers, with every conclusion traceable back to a specific metric
 - Once analysis finishes, clicking through to the result takes you to the result page, which has 5 tabs:
   - **Overview** — a snapshot of the core metrics: BPM, key, time signature, instruments, genre, mood
@@ -24,7 +24,13 @@
   - **Aesthetic** — the four-dimensional score (physical precision, structural logic, emotional depth, vital tension) and the concrete evidence metrics behind each score
   - **AI Analysis** — a written interpretation grounded in the previous layers' data, with follow-up questions supported
 
-### Features
+### More Features
+- **Export history** — export the entire history as a multi-sheet Excel workbook (overview, genre/instrument rankings, aesthetic evidence, emotion arc, structure segments, chords, AI tool-call log)
+- **Aesthetic comparison** — select up to 20 past analyses to compare their four aesthetic dimensions side by side
+- **Result export** — download a single analysis result as JSON
+- **Upload queue** — when uploading in bulk, the page shows each track's live processing step and queue position
+
+### Design Principles
 - Self-hosted — your music files stay entirely on your own machine; only the structured metrics produced by analysis are sent to the LLM, keeping music copyright and privacy fully under your control
 - AI analysis can be turned off entirely: without an OpenAI key configured, only the acoustic feature, classification, and aesthetic scoring layers run, and no data ever leaves your machine
 - Acoustic features → classification → aesthetic scoring → AI interpretation: the four layers run as one connected pipeline, not a collection of isolated point tools
@@ -33,6 +39,16 @@
 - A track is cached the first time it's analyzed, so re-uploading it skips re-running the pipeline — though Chinese and English each keep their own cache, so switching language triggers a fresh analysis
 
 ## Local Deployment 🚀
+
+### Video Walkthrough
+
+**Build from source** (`deploy-build.sh`):
+
+https://github.com/user-attachments/assets/c5d27463-e13c-4c6c-9b8d-288499e00051
+
+**Pull prebuilt images** (`deploy-pull.sh`):
+
+https://github.com/user-attachments/assets/01403571-0656-4154-967a-5f886bd1594f
 
 ### Requirements
 Requires [Docker](https://docs.docker.com/get-docker/) (with the Compose plugin): macOS/Windows can just install [Docker Desktop](https://www.docker.com/products/docker-desktop/); Linux should install Docker Engine + the Compose plugin per the [official docs](https://docs.docker.com/engine/install/) for your distribution
@@ -51,10 +67,7 @@ Two ways to deploy, pick one:
 - `./deploy-pull.sh` — pulls prebuilt images from the GitHub Container Registry (`ghcr.io`) instead of building locally, up and running in seconds. Runs whatever CI last built on `main`, not your local uncommitted changes
 
 China mirror notes for `./deploy-build.sh`'s local build:
-> If you're building from mainland China, you may hit `go mod download` / `apt-get` network timeouts — manually edit two files to switch to China mirrors:
-> 1. In `apps/gateway/Dockerfile`, delete the leading `#` comment marker from this line: `# ENV GOPROXY="https://goproxy.cn,direct"`
-> 2. In `apps/engine/Dockerfile`, delete the leading `#` comment marker from these two lines: `# RUN (sed -i 's|deb.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || true)` and `# && (sed -i 's|deb.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list 2>/dev/null || true)`
-> 3. If `uv sync` times out downloading large dependencies like torch/scikit-learn, in `apps/engine/Dockerfile`, delete the leading `#` comment marker from this line: `# ENV UV_DEFAULT_INDEX="https://pypi.tuna.tsinghua.edu.cn/simple"`
+> If you're building from mainland China, you may hit `go mod download` / `apt-get` / GitHub / `uv sync` network issues. `./deploy-build.sh` asks about this up front — answer `y` to "Building from mainland China?" and it switches Go modules, apt, PyPI, and git's HTTP version to China mirrors for you, no manual file editing needed.
 
 On first run, the script asks for three OpenAI-related settings (API Key / Base URL / Model) in turn — press Enter to skip any of them. Skipping still leaves the app fully usable, just without AI analysis; rerun the same script anytime to fill them in:
 
@@ -120,12 +133,18 @@ Start the Postgres and Redis services:
 docker compose -f docker-compose.dev.yml up -d postgres redis
 ```
 
+Download the pretrained genre/instrument/emotion models:
+
+```bash
+cd apps/engine && make models
+```
+
 Start each service:
 
 ```bash
-cd apps/engine && uv run main.py # Engine service
-cd apps/gateway && go run ./cmd # Gateway service
-cd apps/web && npm install && npm run dev # Web service
+cd apps/engine && make run # Engine service
+cd apps/gateway && make run # Gateway service
+cd apps/web && npm install && make run # Web service
 ```
 
 Before committing, run `make lint` in each service's directory:
@@ -135,6 +154,19 @@ cd apps/engine && make lint
 cd apps/gateway && make lint
 cd apps/web && make lint
 ```
+
+### Batch Upload
+
+Batch-upload every audio file in a directory:
+
+```bash
+uv run scripts/upload.py /path/to/songs
+uv run scripts/upload.py /path/to/songs --language en --base-url http://localhost:3000
+```
+
+- Skips files already analyzed (checked by content hash against history before uploading) — running the same batch again never creates duplicate jobs
+- Caps at 100 uploads per run; going over aborts without uploading anything, telling you to split into smaller batches
+- Stdlib-only — `uv run` executes it directly, no extra dependencies to install
 
 ## Feedback 😥
 - If you have questions or suggestions, feel free to reach out by email: [shanglin@zju.edu.cn](mailto:shanglin@zju.edu.cn)

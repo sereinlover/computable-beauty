@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -12,6 +13,14 @@ import (
 // WorkerPollInterval is how long the worker waits before re-checking for a
 // pending job when the queue is empty.
 const WorkerPollInterval = 1 * time.Second
+
+// engineUnreachableBackoff avoids immediately re-picking the same job and
+// hammering Engine again before it's back up.
+const engineUnreachableBackoff = 3 * time.Second
+
+// maxEngineUnreachableRetries caps retries per job — unlimited retries on a
+// dead Engine would permanently block the queue behind the oldest job.
+const maxEngineUnreachableRetries = 2
 
 // Worker processes the jobs table's pending rows serially: one goroutine,
 // oldest job first, next one only after the current reaches a terminal
@@ -30,6 +39,9 @@ type Worker struct {
 
 	pollInterval time.Duration
 	doneC        chan struct{}
+	// unreachableRetries counts ErrEngineUnreachable requeues per job ID;
+	// single-goroutine access, no locking needed.
+	unreachableRetries map[string]int
 }
 
 // NewWorker fills in Worker's internal-only fields; the poll interval is
@@ -37,6 +49,7 @@ type Worker struct {
 func NewWorker(w Worker) *Worker {
 	w.pollInterval = WorkerPollInterval
 	w.doneC = make(chan struct{})
+	w.unreachableRetries = make(map[string]int)
 	return &w
 }
 
@@ -76,7 +89,14 @@ func (w *Worker) Run(ctx context.Context) {
 			continue
 		}
 
-		w.processJob(context.Background(), job)
+		if w.processJob(context.Background(), job) {
+			// Engine unreachable, likely mid-restart — pause before re-picking it.
+			select {
+			case <-ctx.Done():
+				return
+			case <-time.After(engineUnreachableBackoff):
+			}
+		}
 	}
 }
 
@@ -102,17 +122,17 @@ func (w *Worker) findExistingAnalysis(ctx context.Context, jobID, key string) (*
 }
 
 // processJob handles one job: mark processing → check whether it's already
-// analyzed → run the pipeline if not → mark done. An error from the check
-// step (FindAnalysis) requeues to pending for a retry; an error from the
-// pipeline or the save step fails the job.
-func (w *Worker) processJob(ctx context.Context, job JobRecord) {
+// analyzed → run the pipeline if not → mark done. Requeues on a check-step
+// failure or ErrEngineUnreachable, fails outright on any other error.
+// Returns true on the unreachable requeue, so Run knows to back off.
+func (w *Worker) processJob(ctx context.Context, job JobRecord) (engineUnreachable bool) {
 	jobID := job.Job.ID
 	start := time.Now()
 	log.Printf("job %s: processing started (audio_id=%s, language=%s)", jobID, job.AudioID, job.Language)
 
 	if err := w.JobStore.UpdateJob(ctx, jobID, contracts.JobStatusProcessing, "", nil); err != nil {
 		log.Printf("job %s: failed to mark processing: %v", jobID, err)
-		return
+		return false
 	}
 
 	key := analysisKey(job.AudioID, job.Language)
@@ -129,22 +149,32 @@ func (w *Worker) processJob(ctx context.Context, job JobRecord) {
 			// only picks up pending jobs, so leaving it as-is would strand it
 			// forever. Fail instead, so the user has a state to retry from.
 			w.fail(ctx, jobID, fmt.Errorf("failed to check existing analysis: %w; failed to requeue: %w", err, requeueErr))
-			return
+			return false
 		}
-		return
+		return false
 	}
 
 	var freshResult *contracts.AnalysisResult
 	if existing == nil {
 		freshResult, err = w.runPipeline(ctx, job)
 		if err != nil {
+			if errors.Is(err, ErrEngineUnreachable) {
+				w.unreachableRetries[jobID]++
+				if w.unreachableRetries[jobID] > maxEngineUnreachableRetries {
+					delete(w.unreachableRetries, jobID)
+					w.fail(ctx, jobID, fmt.Errorf("engine unreachable after %d retries, giving up: %w", maxEngineUnreachableRetries, err))
+					return false
+				}
+				w.requeueUnreachable(ctx, jobID, err)
+				return true
+			}
 			w.fail(ctx, jobID, err)
-			return
+			return false
 		}
 		// Write order: the store (source of truth) before the cache.
 		if err := w.AnalysisStore.SaveAnalysis(ctx, key, &AnalysisRecord{Result: freshResult}); err != nil {
 			w.fail(ctx, jobID, fmt.Errorf("failed to save analysis: %w", err))
-			return
+			return false
 		}
 	} else if existing.Result.ExplanationSkipped && w.HasOpenAIKey {
 		// Cached from before a key was configured — L1-L3 are still good,
@@ -159,7 +189,7 @@ func (w *Worker) processJob(ctx context.Context, job JobRecord) {
 			log.Printf("job %s: retrying explain for a previously-skipped analysis failed, keeping the cached result: %v", jobID, explainErr)
 		} else if err := w.AnalysisStore.UpdateAnalysis(ctx, key, &AnalysisRecord{Result: retried}); err != nil {
 			w.fail(ctx, jobID, fmt.Errorf("failed to update analysis with retried explanation: %w", err))
-			return
+			return false
 		} else {
 			freshResult = retried
 		}
@@ -176,8 +206,9 @@ func (w *Worker) processJob(ctx context.Context, job JobRecord) {
 		if requeueErr := w.JobStore.UpdateJob(ctx, jobID, contracts.JobStatusPending, "", nil); requeueErr != nil {
 			w.fail(ctx, jobID, fmt.Errorf("failed to mark done: %w; failed to requeue: %w", err, requeueErr))
 		}
-		return
+		return false
 	}
+	delete(w.unreachableRetries, jobID)
 	if freshResult != nil {
 		if err := w.AnalysisCache.SetAnalysis(ctx, key, freshResult); err != nil {
 			log.Printf("job %s: failed to warm analysis cache: %v", jobID, err)
@@ -187,6 +218,7 @@ func (w *Worker) processJob(ctx context.Context, job JobRecord) {
 		log.Printf("job %s: failed to set done status cache: %v", jobID, err)
 	}
 	log.Printf("job %s: done in %.2fs", jobID, duration)
+	return false
 }
 
 // runPipeline calls the Engine's four endpoints in sequence, updating the
@@ -291,5 +323,16 @@ func (w *Worker) fail(ctx context.Context, jobID string, cause error) {
 	}
 	if err := w.JobCache.SetJobStatus(ctx, jobID, contracts.JobStatusFailed); err != nil {
 		log.Printf("job %s: failed to set failed status cache: %v", jobID, err)
+	}
+}
+
+// requeueUnreachable resets a job to pending after ErrEngineUnreachable —
+// unlike fail, this isn't a verdict on the audio, just a retry.
+func (w *Worker) requeueUnreachable(ctx context.Context, jobID string, cause error) {
+	log.Printf("job %s: engine unreachable, requeueing: %v", jobID, cause)
+	if err := w.JobStore.UpdateJob(ctx, jobID, contracts.JobStatusPending, "", nil); err != nil {
+		// Same reasoning as findExistingAnalysis's requeue above — stuck
+		// at processing forever otherwise.
+		w.fail(ctx, jobID, fmt.Errorf("engine unreachable: %w; failed to requeue: %w", cause, err))
 	}
 }

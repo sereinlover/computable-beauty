@@ -36,10 +36,54 @@ export const AESTHETIC_DIMENSION_BAR: Record<string, string> = {
   vital_tension: "[&>[data-slot=progress-indicator]]:bg-emerald-500",
 };
 
+// Same four hues as AESTHETIC_DIMENSION_BAR above, as text/fill utilities —
+// used by OverviewCards' mini radar (vertex dots) and its score numbers, so
+// a dimension's color means the same thing whether it's a bar, a dot, or a number.
+export const AESTHETIC_DIMENSION_TEXT: Record<string, string> = {
+  physical_precision: "text-orange-500",
+  structural_logic: "text-sky-500",
+  emotional_depth: "text-violet-500",
+  vital_tension: "text-emerald-500",
+};
+
+export const AESTHETIC_DIMENSION_FILL: Record<string, string> = {
+  physical_precision: "fill-orange-500",
+  structural_logic: "fill-sky-500",
+  emotional_depth: "fill-violet-500",
+  vital_tension: "fill-emerald-500",
+};
+
+// The order evidence rows render in per dimension, matching each Scorer's
+// WEIGHTS dict order in apps/engine/scoring/*.py — not the order they
+// arrive over the wire. AestheticBundle.evidence is a Go map[string]float64,
+// and encoding/json.Marshal sorts map keys alphabetically, so Python's
+// original field order is gone by the time it reaches the browser; this is
+// the only place it survives.
+export const EVIDENCE_FIELD_ORDER: Record<(typeof AESTHETIC_DIMENSION_ORDER)[number], string[]> = {
+  physical_precision: ["tempo_stability", "dynamic_range_db", "frequency_balance_std_db"],
+  structural_logic: ["tsd_coverage", "segment_balance_ratio", "n_distinct_chords"],
+  emotional_depth: ["valence_delta", "arousal_std", "polarity_switches", "polarity_switch_rate"],
+  vital_tension: ["dynamic_contrast", "burst_density"],
+};
+
 // Order for the five emotion dimensions. Label/description/computation copy
 // lives in messages/*.json under the "EmotionDimension" namespace, looked up
 // by the same key as METRIC_BAR_COLOR above.
 export const EMOTION_DIMENSION_ORDER = ["arousal", "valence", "tension", "release", "energy"] as const;
+
+// OverviewCards' 2-column mini grid pairs (arousal, tension) and (valence,
+// release) — the direct model outputs in one column, the dissonance-derived
+// pair in the other — with energy alone on its own full-width row. Same text
+// color as METRIC_BAR_COLOR's bars; valence has no fixed color here since its
+// diverging bar switches blue/green by sign (see EmotionDimensions).
+export const EMOTION_DIMENSION_GRID_ORDER = ["arousal", "tension", "valence", "release", "energy"] as const;
+
+export const METRIC_TEXT_COLOR: Record<string, string> = {
+  arousal: "text-orange-500",
+  tension: "text-violet-500",
+  release: "text-emerald-500",
+  energy: "text-amber-500",
+};
 
 export const SEGMENT_COLOR: Record<string, string> = {
   intro: "bg-slate-300 dark:bg-slate-600",
@@ -47,14 +91,6 @@ export const SEGMENT_COLOR: Record<string, string> = {
   chorus: "bg-violet-300 dark:bg-violet-700",
   bridge: "bg-amber-300 dark:bg-amber-700",
   outro: "bg-rose-300 dark:bg-rose-700",
-};
-
-export const SEGMENT_ABBR: Record<string, string> = {
-  intro: "in",
-  verse: "v",
-  chorus: "ch",
-  bridge: "br",
-  outro: "out",
 };
 
 export const SEGMENT_NAME: Record<string, string> = {

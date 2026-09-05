@@ -43,5 +43,12 @@ func HashAndSaveFile(src io.Reader, destDir, ext string) (audioID, path string, 
 		return "", "", fmt.Errorf("failed to save upload file: %w", err)
 	}
 
+	// os.CreateTemp creates at 0600, which os.Rename carries over — fine
+	// natively, but Engine reads this path from its own container under a
+	// different uid (docker-compose.base.yml's shared uploads volume).
+	if err := os.Chmod(finalPath, 0o644); err != nil {
+		return "", "", fmt.Errorf("failed to set upload file permissions: %w", err)
+	}
+
 	return audioID, finalPath, nil
 }

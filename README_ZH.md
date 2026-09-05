@@ -1,28 +1,34 @@
 <!-- TODO: 把封面图放到 assets/cover.png -->
 <div align=center><img src="assets/cover.jpg" width="256px;" alt="Computable Beauty"></div>
-<p align='center'>音乐的美，可以被计算吗？<br>上传一段音乐，把物理层、结构层、情感层、生命层这四维美学直觉，翻译成可计算、可验证的维度</p>
+<p align='center'>音乐的美，可以被计算吗？<br>上传一段音乐，把精确的节奏结构（物理层）、严谨考究的编曲逻辑（结构层）、直面情绪起伏的深度（情感层）、张弛分明的能量起伏（活力层），翻译成可计算的维度</p>
 
 ## README 🌍
 - [ [English](./README.md) ] | [ [简体中文](./README_ZH.md) ]
 
 ## 产品演示 🎵
 
-> TODO：演示视频占位
+https://github.com/user-attachments/assets/aa1c69ee-2891-4866-bb5d-ff6980cc3d52
 
 ## 产品介绍 ❤️
 
 ### 产品概述
 - Computable Beauty 是一个 AI 音乐美学分析系统：上传一段音乐（MP3/WAV/FLAC/OGG），运行一套四层分析流水线：
   1. **声学特征提取** — 从音频波形中计算频谱、节拍网格、调式音高分布与动态包络，生成基础特征向量
-  2. **多任务语义分类** — 并行推理流派归属、情感效价与唤醒度、乐器构成，同步检测和弦进行、调式与段落边界
-  3. **四维美学评分** — 基于声学指标与分类结果，量化物理精确性、结构逻辑、情感深度、生命张力四个维度，合成综合美学指数
+  2. **多任务语义分类** — 并行推理流派归属、情感效价与唤醒度、乐器构成，同步检测和弦进行与段落边界
+  3. **四维美学评分** — 基于声学指标与分类结果，独立量化物理精确性、结构逻辑、情感深度、活力张力四个维度，四维独立展示，不合成综合指数
   4. **AI 循证解读** — 以前序各层的结构化输出为证据，由语言模型生成与数据严格对应的文字分析，每项结论均可回溯至具体指标
 - 分析完成后，点击查看结果会跳转到结果页，结果页分 5 个 Tab：
   - **概览** — BPM、调性、节拍、乐器、风格、情绪等核心指标一览
   - **结构分析** — 完整的段落分段与和弦进行
   - **情感分析** — 情感弧线图，以及唤醒度、效价、张力、释放度、能量五个维度的详细说明
-  - **美学分析** — 物理精确性、结构逻辑、情感深度、生命张力四维评分，及每项评分背后的具体证据指标
+  - **美学分析** — 物理精确性、结构逻辑、情感深度、活力张力四维评分，及每项评分背后的具体证据指标
   - **AI 分析** — 基于前序数据生成的文字解读，可继续追问
+
+### 更多功能
+- **导出记录** — 支持导出全部历史为多工作表 Excel（概览、风格/乐器排名、美学证据、情感弧线、段落、和弦、AI 工具调用日志）
+- **美学对比** — 可勾选最多 20 首历史分析进行美学四维并排对比
+- **结果导出** — 结果页支持下载单首分析结果为 JSON
+- **上传排队** — 批量上传时，页面实时显示每首歌的处理步骤与前方排队位置
 
 ### 产品特性
 - 本地部署，音乐文件始终保留在用户本地，仅分析产出的结构化指标会发送至 LLM，音乐版权与隐私始终可控
@@ -33,6 +39,16 @@
 - 同一首歌分析过一次即会缓存，重复上传无需重新分析；但中英文各自维护一份缓存，切换语言会触发重新分析
 
 ## 本地部署 🚀
+
+### 视频演示
+
+**本地构建**（`deploy-build.sh`）：
+
+https://github.com/user-attachments/assets/c5d27463-e13c-4c6c-9b8d-288499e00051
+
+**基于镜像**（`deploy-pull.sh`）：
+
+https://github.com/user-attachments/assets/01403571-0656-4154-967a-5f886bd1594f
 
 ### 环境需求
 需要 [Docker](https://docs.docker.com/get-docker/)（含 Compose 插件）：macOS/Windows 安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/) 即可；Linux 参照[官方文档](https://docs.docker.com/engine/install/)按发行版安装 Docker Engine + Compose 插件
@@ -51,10 +67,7 @@ cd computable-beauty
 - `./deploy-pull.sh` —— 直接从 GitHub Container Registry（`ghcr.io`）拉取 CI 构建好的镜像启动，不用本地构建，速度较快；跑的是 `main` 分支最后一次 CI 构建出的版本，不包含你本地未提交的改动
 
 `./deploy-build.sh` 本地构建时的镜像加速说明：
-> 中国大陆用户在构建时可能会遇到 `go mod download` / `apt-get` 网络超时，需要手动编辑两个文件，改用国内镜像源：
-> 1. 文件 `apps/gateway/Dockerfile` 中，把 `# ENV GOPROXY="https://goproxy.cn,direct"` 这一行开头的注释符号 `#` 去掉。
-> 2. 文件 `apps/engine/Dockerfile` 中，把 `# RUN (sed -i 's|deb.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || true)` 和 `# && (sed -i 's|deb.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list 2>/dev/null || true)` 这两行开头的注释符号 `#` 都去掉。
-> 3. 如果 `uv sync` 下载 torch/scikit-learn 等大体积依赖时超时，在文件 `apps/engine/Dockerfile` 中，把 `# ENV UV_DEFAULT_INDEX="https://pypi.tuna.tsinghua.edu.cn/simple"` 这一行开头的注释符号 `#` 去掉。
+> 中国大陆用户在构建时可能会遇到 `go mod download` / `apt-get` / GitHub / `uv sync` 连接问题。`./deploy-build.sh` 一开始就会问"是否在中国大陆构建？"，回答 `y` 即可自动把 Go modules、apt、PyPI、git 的 HTTP 版本都切到国内镜像，不需要手动改文件。
 
 首次运行会依次询问三个 OpenAI 相关配置（API Key / Base URL / Model），均可直接回车跳过——跳过后应用正常可用，只是 AI 分析不可用，可随时重新运行同一个脚本补填：
 
@@ -120,12 +133,18 @@ cp .env.example .env.local
 docker compose -f docker-compose.dev.yml up -d postgres redis
 ```
 
+下载流派/乐器/情感预训练模型：
+
+```bash
+cd apps/engine && make models
+```
+
 启动各服务：
 
 ```bash
-cd apps/engine && uv run main.py # Engine 服务
-cd apps/gateway && go run ./cmd # Gateway 服务
-cd apps/web && npm install && npm run dev # Web 服务
+cd apps/engine && make run # Engine 服务
+cd apps/gateway && make run # Gateway 服务
+cd apps/web && npm install && make run # Web 服务
 ```
 
 提交前，在各服务目录下运行 `make lint`：
@@ -135,6 +154,19 @@ cd apps/engine && make lint
 cd apps/gateway && make lint
 cd apps/web && make lint
 ```
+
+### 批量上传
+
+批量上传指定目录下所有音频文件：
+
+```bash
+uv run scripts/upload.py /path/to/songs
+uv run scripts/upload.py /path/to/songs --language en --base-url http://localhost:3000
+```
+
+- 按内容哈希跳过已经分析过的文件（上传前先查一遍历史记录），重复跑同一批文件不会产生重复任务
+- 单次最多上传 100 首，超过会直接终止、不上传任何文件，提示拆成更小的批次分批跑
+- 只依赖 Python 标准库，`uv run` 直接执行即可，不需要额外装依赖
 
 ## 问题反馈 😥
 - 如有问题或建议，欢迎通过邮件联系：[shanglin@zju.edu.cn](mailto:shanglin@zju.edu.cn)

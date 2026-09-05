@@ -11,8 +11,7 @@ export default getRequestConfig(async () => {
     locale = cookieLocale as Locale;
   } else {
     // No cookie yet (first visit) — fall back to the browser's own
-    // preference via Accept-Language instead of always defaulting, same
-    // direction lib/language.ts's old navigator.language check used.
+    // preference via Accept-Language instead of always defaulting.
     const acceptLanguage = (await headers()).get("accept-language") ?? "";
     locale = acceptLanguage.toLowerCase().startsWith("zh") ? "zh" : defaultLocale;
   }

@@ -5,35 +5,42 @@ description = "Python AI engine — L1-L4 audio analysis: feature extraction, cl
 requires-python = ">=3.12"
 dependencies = [
     "contracts",
+    "cython>=3.0.0",
+    # essentia-tensorflow is a strict superset of essentia (same `essentia`
+    # import namespace, plus TensorflowPredict* classes) — installing both
+    # packages makes one silently overwrite the other's files in
+    # site-packages, and whichever wins depends on install order (not
+    # guaranteed stable across platforms/uv versions). Only ever depend on
+    # this one.
+    "essentia-tensorflow==2.1b6.dev1389",
     "fastapi>=0.139.0",
     "librosa>=0.11.0",
+    "madmom",
+    "msaf",
     "numpy>=2.4.6",
     "openai>=2.45.0",
     "python-dotenv>=1.2.2",
     "python-multipart>=0.0.32",
     "scipy>=1.18.0",
+    "setuptools<81",
     "soundfile>=0.14.0",
-    "torch>=2.13.0",
     "uvicorn[standard]>=0.51.0",
 ]
 
 [tool.uv.sources]
 contracts = { path = "../../contracts", editable = true }
-# The Linux container has no GPU, but PyPI's default torch wheel bundles a full
-# CUDA runtime (cuBLAS/cuDNN/NCCL, etc.), adding several GB for nothing. Only
-# override the index on Linux to PyTorch's official CPU-only wheels; macOS stays
-# on the default PyPI resolution (which never bundled CUDA to begin with).
-torch = [
-    { index = "pytorch-cpu", marker = "sys_platform == 'linux'" },
-]
+madmom = { git = "https://github.com/CPJKU/madmom", rev = "27f032e8947204902c675e5e341a3faf5dc86dae" }
+msaf = { git = "https://github.com/urinieto/msaf", rev = "ee0dae1460941cbf677dce7f0c8f5c3e81c5b66c" }
 
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
+# madmom's setup.py imports Cython/numpy at build time without declaring them
+# as PEP 517 build dependencies — it needs them already present in the
+# environment doing the build, not a fresh isolated one.
+[tool.uv]
+no-build-isolation-package = ["madmom"]
 
 [dependency-groups]
 dev = [
+    "jupyter>=1.1.1",
     "pytest>=9.1.1",
     "ruff>=0.14.0",
 ]
@@ -46,6 +53,9 @@ filterwarnings = [
     # audioread (librosa's mp3 decode fallback) imports these stdlib modules,
     # slated for removal in Python 3.13 (PEP 594) — not something we can fix here.
     "ignore::DeprecationWarning:audioread.*",
+    # msaf's pymf submodule imports scipy.misc.factorial, deprecated upstream —
+    # not something we can fix in a third-party dependency.
+    "ignore::DeprecationWarning:msaf.*",
 ]
 
 [tool.ruff]

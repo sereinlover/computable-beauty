@@ -48,6 +48,16 @@ func newApp(ctx context.Context, cfg *conf.Config) (*app, error) {
 	analysisRedisCache := data.NewAnalysisRedisCache(redisCache)
 	engineClient := data.NewHTTPEngineClient(cfg.EngineURL, cfg.InternalToken)
 
+	// Requeues any job orphaned at status=processing by a previous crash/
+	// restart before it can sort to the front of apps/web's queue view —
+	// see biz.JobStore.RequeueStuckJobs.
+	if titles, err := jobPGStore.RequeueStuckJobs(ctx); err != nil {
+		pgStore.Close()
+		return nil, fmt.Errorf("failed to requeue stuck jobs: %w", err)
+	} else if len(titles) > 0 {
+		log.Printf("requeued %d job(s) stuck at status=processing from a previous run: %v", len(titles), titles)
+	}
+
 	jobSvc := service.NewJobService(jobPGStore, jobRedisCache, engineClient)
 	srv := server.New(server.Server{
 		PG:        pgStore,

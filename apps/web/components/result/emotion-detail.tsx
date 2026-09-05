@@ -22,10 +22,21 @@ export async function EmotionDetail({ understanding }: { understanding: Understa
             </div>
             <p className="mb-2 text-sm text-muted-foreground">{tDimension(`${key}.description`)}</p>
             <Progress value={toEmotionPercent(key, value)} className={`h-2 ${METRIC_BAR_COLOR[key]}`} />
-            <p className="mt-2 text-xs text-muted-foreground">
-              <span className="font-medium">{t("computationMethod")}</span>
-              {tDimension(`${key}.computation`)}
-            </p>
+            <div className="mt-2 space-y-1 font-mono text-[11px] text-muted-foreground">
+              <p>
+                <span className="font-medium">{t("computationMethod")}</span>
+                {tDimension(`${key}.computation`)}
+              </p>
+              {tDimension(`${key}.formula`)
+                .split("\n")
+                .map((line, i) => (
+                  <p key={i}>
+                    {line}
+                    <span className="font-medium">{t("valueRange")}</span>
+                    {tDimension(`${key}.range`)}
+                  </p>
+                ))}
+            </div>
           </div>
         );
       })}

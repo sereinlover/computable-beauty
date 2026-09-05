@@ -12,6 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { RecentAnalysisList } from "@/components/analyze/history-item";
 import { formatDuration } from "@/lib/format";
+import { useAnimatedProgress } from "@/lib/use-animated-progress";
 
 // Same four steps/order as apps/gateway/internal/server/sse.go's sseStepInfo
 // — Gateway's SSE messages are English, apps/web owns the translated copy
@@ -32,11 +33,10 @@ function stepIndexFromError(error: string): number {
 }
 
 // Step-by-step record shown in a tooltip once a job finishes — the live
-// in-progress checklist disappears once the card switches layout, so this is
-// the only place that history survives. mode="completed" marks every step
-// done except explaining when explanationSkipped (no OPENAI_API_KEY).
-// mode="failed" marks steps before currentIndex done, currentIndex itself as
-// failed, the rest unreached.
+// in-progress checklist disappears once the card switches layout, so this
+// is the only place that history survives. mode="completed" marks every
+// step done except explaining (if explanationSkipped); mode="failed" marks
+// steps before currentIndex done, currentIndex failed, the rest unreached.
 function StepChecklist({
   mode,
   currentIndex,
@@ -115,8 +115,16 @@ function ActiveJobCard({
   // open state is lifted to the card's onMouseEnter/Leave while
   // TooltipTrigger stays scoped to the icon for positioning.
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const animatedProgress = useAnimatedProgress(step, progress);
 
   useEffect(() => {
+    // Opening one long-lived SSE connection per queued card exhausts the
+    // browser's per-origin connection limit once enough songs are queued
+    // (6 in Chrome/Firefox), blocking unrelated requests like uploads or
+    // navigation — so a card only connects once it's at the front of the
+    // queue. `position` ticks down purely from earlier cards' onDone firing.
+    if (position > 0) return;
+
     const source = new EventSource(`/api/progress?job_id=${job.id}`);
 
     source.addEventListener("pending", () => setStep(null));
@@ -161,7 +169,7 @@ function ActiveJobCard({
 
     return () => source.close();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [job.id]);
+  }, [job.id, position]);
 
   // Last step SSE reported — still meaningful after completed/failed flips
   // true (neither event resets `step`). "explain_skipped" isn't in
@@ -258,9 +266,9 @@ function ActiveJobCard({
       {!isQueued && (
         <>
           <div className="mt-4 flex items-center justify-end">
-            <span className="text-xs font-medium text-muted-foreground">{Math.round(progress * 100)}%</span>
+            <span className="text-xs font-medium text-muted-foreground">{Math.round(animatedProgress * 100)}%</span>
           </div>
-          <Progress value={progress * 100} className="mt-1" />
+          <Progress value={animatedProgress * 100} className="mt-1" />
 
           <ul className="mt-4 space-y-2">
             {STEP_ORDER.map((s, i) => {

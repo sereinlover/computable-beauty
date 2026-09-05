@@ -3,9 +3,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from features.audio_loader import MAX_DURATION_SEC, SAMPLE_RATE, load_audio
+from features.audio import MAX_DURATION_SEC, SAMPLE_RATE, load_audio
 
-SAMPLE_PATH = str(Path(__file__).parent / "fixtures" / "sample.mp3")
+SAMPLE_PATH = str(Path(__file__).parent.parent / "fixtures" / "sample.mp3")
 
 
 def test_load_audio_returns_mono_waveform_at_target_sample_rate():
@@ -22,6 +22,6 @@ def test_load_audio_rejects_files_over_the_duration_limit(monkeypatch):
         # a multi-hundred-MB fixture file just to hit this branch.
         return np.zeros(sr * (MAX_DURATION_SEC + 1)), sr
 
-    monkeypatch.setattr("features.audio_loader.librosa.load", fake_librosa_load)
+    monkeypatch.setattr("features.audio.librosa.load", fake_librosa_load)
     with pytest.raises(ValueError):
         load_audio("unused.mp3")  # librosa.load is mocked, the path is never read

@@ -40,6 +40,10 @@ func (f *fakeJobStore) NextJob(context.Context) (biz.JobRecord, bool, error) {
 	return biz.JobRecord{}, false, nil
 }
 
+func (f *fakeJobStore) RequeueStuckJobs(context.Context) ([]string, error) {
+	return nil, nil
+}
+
 // jobCache and engine are nil: handleSubmitJob never touches them.
 func newTestServer(t *testing.T) (*Server, *fakeJobStore) {
 	t.Helper()

@@ -28,11 +28,17 @@ jobs:
         working-directory: apps/engine
     steps:
       - uses: actions/checkout@v4
+      # madmom (chord/signature) shells out to ffmpeg for mp3 decoding —
+      # unlike soundfile/librosa, it doesn't bundle its own decoder.
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
       - uses: astral-sh/setup-uv@v5
       - uses: actions/setup-python@v5
         with:
           python-version-file: apps/engine/pyproject.toml
       - run: uv sync
+      # genre/instrument/emotion classifiers load these at test time — not
+      # committed to the repo (see Makefile's `models` target).
+      - run: make models
       - run: make lint-ci
       - run: make test
 
@@ -62,12 +68,28 @@ jobs:
     permissions:
       contents: read
       packages: write
+      attestations: write
+      id-token: write
     strategy:
       matrix:
-        service: [engine, gateway, web]
+        include:
+          # engine: essentia-tensorflow (genre/instrument/emotion
+          # classifiers) has no Linux aarch64 wheel on PyPI as of this
+          # writing — amd64-only until that changes or we build our own
+          # arm64 wheel. docker-compose.base.yml pins the engine service to
+          # linux/amd64 unconditionally, so both deploy-build.sh and
+          # deploy-pull.sh run it under emulation on Apple Silicon.
+          - service: engine
+            platforms: linux/amd64
+          - service: gateway
+            platforms: linux/amd64,linux/arm64
+          - service: web
+            platforms: linux/amd64,linux/arm64
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
+        with:
+          image: tonistiigi/binfmt:latest
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         with:
@@ -78,6 +100,6 @@ jobs:
         with:
           context: .
           file: apps/${{ matrix.service }}/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platforms }}
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/computable-beauty-${{ matrix.service }}:latest

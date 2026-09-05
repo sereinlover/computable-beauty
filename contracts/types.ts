@@ -18,7 +18,7 @@ export interface FeatureSummary {
 export interface EmotionPoint {
   timestamp_sec: number;
   valence: number; // -1.0 ~ 1.0
-  arousal: number; // -1.0 ~ 1.0
+  arousal: number; // 0.0 ~ 1.0
 }
 
 export interface Segment {
@@ -55,7 +55,7 @@ export interface UnderstandingBundle {
   release: number;    // 0.0 ~ 1.0
   energy: number;     // 0.0 ~ 1.0
   emotion_arc: EmotionPoint[];
-  time_signature: string;  // e.g. "4/4"
+  signature: string;  // e.g. "4/4"
   instruments: InstrumentEntry[];
   structure: Segment[];
   chords: ChordEvent[];
@@ -68,14 +68,14 @@ export interface DimensionScore {
   evidence: Record<string, number>;
 }
 
+// Four independent dimensions, deliberately with no combined score — beauty
+// isn't a single scalar, collapsing it into one number hides more than it reveals.
 export interface AestheticBundle {
   audio_id: string;
   physical_precision: DimensionScore;
   structural_logic: DimensionScore;
   emotional_depth: DimensionScore;
   vital_tension: DimensionScore;
-  aesthetic_index: number; // 0 ~ 100
-  weights: Record<string, number>;
 }
 
 // ─── Analysis result ──────────────────────────────────────────────────────────

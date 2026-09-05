@@ -10,11 +10,15 @@ import { ResultTabs } from "@/components/result/result-tabs";
 import { ResultActions } from "@/components/result/result-actions";
 import { OverviewCards } from "@/components/result/overview-cards";
 import { EmotionArcChart } from "@/components/result/emotion-arc-chart";
+import { EmotionHeatmapChart } from "@/components/result/emotion-heatmap-chart";
+import { EmotionTrajectoryChart } from "@/components/result/emotion-trajectory-chart";
 import { StructureSection } from "@/components/result/structure-section";
+import { StructureAnalysis } from "@/components/result/structure-analysis";
 import { EmotionDimensions } from "@/components/result/emotion-dimensions";
 import { AestheticDimensions } from "@/components/result/aesthetic-dimensions";
-import { ChordList } from "@/components/result/chord-list";
 import { AestheticDetail } from "@/components/result/aesthetic-detail";
+import { AestheticRadarChart } from "@/components/result/aesthetic-radar-chart";
+import { AestheticParallelChart } from "@/components/result/aesthetic-parallel-chart";
 import { EmotionDetail } from "@/components/result/emotion-detail";
 import { ChatPanel } from "@/components/result/chat-panel";
 import { ToolCallLog } from "@/components/result/tool-call-log";
@@ -68,7 +72,6 @@ export default async function ResultPage(props: PageProps<"/result/[id]">) {
                     <StructureSection
                       structure={understanding.structure}
                       chords={understanding.chords}
-                      durationSec={feature_summary.duration_sec}
                       tonicChord={tonicChord}
                     />
                   </CardContent>
@@ -89,20 +92,25 @@ export default async function ResultPage(props: PageProps<"/result/[id]">) {
           emotionArc={
             <div className="space-y-8">
               <EmotionArcChart data={understanding.emotion_arc} />
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <EmotionHeatmapChart data={understanding.emotion_arc} />
+                <EmotionTrajectoryChart data={understanding.emotion_arc} />
+              </div>
               <EmotionDetail understanding={understanding} />
             </div>
           }
           structure={
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <StructureSection
-                structure={understanding.structure}
-                durationSec={feature_summary.duration_sec}
-                variant="full"
-              />
-              <ChordList chords={understanding.chords} tonicChord={tonicChord} />
+            <StructureAnalysis structure={understanding.structure} chords={understanding.chords} tonicChord={tonicChord} />
+          }
+          aesthetic={
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <AestheticRadarChart aesthetic={aesthetic} />
+                <AestheticParallelChart aesthetic={aesthetic} />
+              </div>
+              <AestheticDetail aesthetic={aesthetic} />
             </div>
           }
-          aesthetic={<AestheticDetail aesthetic={aesthetic} />}
           aiExplain={
             explanation_skipped ? (
               <p className="text-sm text-muted-foreground">{t("aiNotConfigured")}</p>

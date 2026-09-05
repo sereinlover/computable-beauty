@@ -72,6 +72,21 @@
   --chart-3: oklch(0.646 0.222 41.116);
   --chart-4: oklch(0.553 0.195 38.402);
   --chart-5: oklch(0.47 0.157 37.304);
+  /* 10-slot categorical palette for AestheticCompareModal (up to 10 songs) —
+     fixed hue order, assigned by selection order, never cycled or
+     reassigned by rank. CVD-checked (dataviz skill's validate_palette.js);
+     the 8-12 slot floor requires the direct labels this feature already has
+     (legend chips, per-chart titles). */
+  --compare-1: #2a78d6;
+  --compare-2: #1baf7a;
+  --compare-3: #eda100;
+  --compare-4: #4a3aa7;
+  --compare-5: #e34948;
+  --compare-6: #008300;
+  --compare-7: #e87ba4;
+  --compare-8: #eb6834;
+  --compare-9: #7c3aed;
+  --compare-10: #0891b2;
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -107,6 +122,16 @@
   --chart-3: oklch(0.646 0.222 41.116);
   --chart-4: oklch(0.553 0.195 38.402);
   --chart-5: oklch(0.47 0.157 37.304);
+  --compare-1: #3987e5;
+  --compare-2: #199e70;
+  --compare-3: #c98500;
+  --compare-4: #9085e9;
+  --compare-5: #e66767;
+  --compare-6: #008300;
+  --compare-7: #d55181;
+  --compare-8: #d95926;
+  --compare-9: #8b6ff0;
+  --compare-10: #1a9bb3;
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.606 0.25 292.717);

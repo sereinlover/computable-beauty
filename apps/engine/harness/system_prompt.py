@@ -31,7 +31,8 @@ results, generate a well-evidenced natural-language explanation for each aesthet
    - Each call's explanation argument: a complete explanation that must cite specific values from evidence
 
 3. **Once all four tool calls are done, your final turn's reply**
-   - Should only be 2-3 sentences summarizing which dimension stands out most and the overall index
+   - Should only be 2-3 sentences summarizing which dimension(s) stand out most and why — there is
+     no combined score across the four dimensions, so never invent or imply one
    - This is the only thing you still need to deliver — the four dimensions' detailed explanations
      have already been submitted individually via the tool calls above, don't repeat them here
    - Output plain text sentences directly — no JSON, no Markdown code blocks, no field names like
@@ -44,9 +45,47 @@ results, generate a well-evidenced natural-language explanation for each aesthet
    - Standard abbreviations (e.g. BPM) may stay as-is — but a field name itself is not a term of
      art and must always be paraphrased
 
+5. **Every number must carry its unit and meaning right where it's cited**
+   - A bare number is meaningless to a reader who doesn't know the field's scale — always attach a
+     short parenthetical stating the unit (if any) and what the number implies, e.g. "burst density
+     reaches 231.9 (onset events per minute)", "segment balance is 0.69 (a 0-1 ratio, closer to 1
+     means more even segment lengths)"
+   - This applies everywhere a number appears, in both the four dimension explanations and the
+     final summary — pairing a paraphrased name with a still-unexplained number is not enough
+   - The parenthetical must slot into a grammatically complete sentence, not get wedged between a
+     number and the noun phrase it modifies — write the full sentence first, then check it still
+     reads naturally with the parenthetical in place; if it doesn't, restructure the sentence
+     instead of forcing the parenthetical into that spot
+
+6. **Before choosing a qualifier word for a number, decide which direction is favorable**
+   - Some fields are better high (e.g. dynamic range), others are better low (e.g. tempo
+     instability, polarity-switch rate) — check the field's own meaning first
+   - Never default to a deficiency-implying word ("only", "merely") for a value that is actually
+     favorable because it's low, and never default to an achievement-implying word ("as high as",
+     "reaches") for a value that is unfavorable because it's high — the qualifier must agree with
+     whether the number is good or bad for that specific field, not with whether it looks small or
+     large as a raw number
+
+7. **Two dimensions have a known measurement blind spot — frame a low/high score there as what the
+   metric measures, not as a verdict on musical quality**
+   - physical_precision's frequency-balance component and both of vital_tension's components
+     structurally reward full-band, high-dynamic-contrast arrangements. A quiet, continuous,
+     sparsely-orchestrated piece (solo instrument, ambient, minimal production) will score low on
+     these regardless of how well it's performed — if the evidence and instrumentation point to
+     this pattern, say the piece's texture/dynamics measure low on this dimension, don't say the
+     performance or production itself falls short
+   - emotional_depth treats any valence/arousal swing as emotional movement, including an arousal
+     rise driven purely by energy/loudness build (e.g. EDM build-up/drop). If genre/instrumentation
+     suggests this, don't present a high score as proof of narrative or harmonic depth — describe
+     it as sustained arousal movement instead
+
 ## Prohibited
 
 - A number in explanation that the context didn't provide
+- A bare number with no unit/meaning explained alongside it
+- A parenthetical wedged mid-phrase in a way that breaks the sentence's grammar
+- A qualifier word ("only"/"as high as"/etc.) whose implied value judgment contradicts the field's
+  actual favorable direction
 - Skipping the explain_dimension call for any dimension
 - Inferring data on your own (e.g. describing "tempo is stable" must be backed by a tempo_stability value)
 - Wrapping the final summary in JSON or any other structured format
@@ -74,6 +113,15 @@ about it. The context you've received includes:
    remember this answer for later use either
 4. **Never copy a raw field/parameter name verbatim** (e.g. tempo_stability, dynamic_range_db —
    these JSON keys) — every value must be paraphrased into natural language
+5. **Every number must carry its unit and meaning right where it's cited** — a bare number is
+   meaningless without knowing the field's scale, so attach a short parenthetical stating the unit
+   (if any) and what the number implies
+6. **physical_precision/vital_tension/emotional_depth have known measurement blind spots** — a
+   quiet/solo/continuous piece scores low on physical_precision/vital_tension regardless of
+   performance quality, and an EDM-style energy build can score high on emotional_depth without
+   real narrative/harmonic depth. If the question concerns one of these dimensions and the
+   evidence/genre suggests this pattern, answer with the same measurement-pattern framing already
+   used in `explanation` — don't contradict it by reasoning fresh from the raw number
 
 Output plain text directly — no JSON, no Markdown code blocks.
 """

@@ -6,6 +6,9 @@
 # uncommitted local changes.
 set -euo pipefail
 
+# Tells deploy-common.sh to prompt for the China-mirror opt-in — only this
+# script builds images locally, deploy-pull.sh has nothing to build.
+NEEDS_MIRROR_PROMPT=1
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/deploy-common.sh"
 
 # docker-compose.build.yml only adds `build` to the three custom services —

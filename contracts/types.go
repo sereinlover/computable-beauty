@@ -60,7 +60,7 @@ type UnderstandingBundle struct {
 	Release         float64           `json:"release"`
 	Energy          float64           `json:"energy"`
 	EmotionArc      []EmotionPoint    `json:"emotion_arc"`
-	TimeSignature   string            `json:"time_signature"`
+	Signature       string            `json:"signature"`
 	Instruments     []InstrumentEntry `json:"instruments"`
 	Structure       []Segment         `json:"structure"`
 	Chords          []ChordEvent      `json:"chords"`
@@ -73,14 +73,15 @@ type DimensionScore struct {
 	Evidence map[string]float64 `json:"evidence"`
 }
 
+// AestheticBundle holds four independent dimensions, deliberately with no
+// combined score — beauty isn't a single scalar, collapsing it into one
+// number hides more than it reveals.
 type AestheticBundle struct {
-	AudioID           string             `json:"audio_id"`
-	PhysicalPrecision DimensionScore     `json:"physical_precision"`
-	StructuralLogic   DimensionScore     `json:"structural_logic"`
-	EmotionalDepth    DimensionScore     `json:"emotional_depth"`
-	VitalTension      DimensionScore     `json:"vital_tension"`
-	AestheticIndex    float64            `json:"aesthetic_index"`
-	Weights           map[string]float64 `json:"weights"`
+	AudioID           string         `json:"audio_id"`
+	PhysicalPrecision DimensionScore `json:"physical_precision"`
+	StructuralLogic   DimensionScore `json:"structural_logic"`
+	EmotionalDepth    DimensionScore `json:"emotional_depth"`
+	VitalTension      DimensionScore `json:"vital_tension"`
 }
 
 // ─── Analysis result ──────────────────────────────────────────────────────────

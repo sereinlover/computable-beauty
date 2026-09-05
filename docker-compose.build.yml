@@ -1,16 +1,27 @@
 # Build-from-source variant of docker-compose.base.yml — adds `build` for
 # engine/gateway/web. Passed with an explicit -f (see deploy-build.sh);
 # mutually exclusive with docker-compose.pull.yml, never combine both.
+#
+# args below forward the China-mirror choice from deploy-build.sh's prompt
+# (exported as shell env vars before `docker compose up --build` runs); the
+# `:-` defaults match each Dockerfile ARG's own default, so building this
+# file directly (without the prompt) behaves the same as before.
 services:
   engine:
     build:
       context: .
       dockerfile: apps/engine/Dockerfile
+      args:
+        APT_MIRROR: ${APT_MIRROR:-}
+        GIT_HTTP1: ${GIT_HTTP1:-false}
+        UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
 
   gateway:
     build:
       context: .
       dockerfile: apps/gateway/Dockerfile
+      args:
+        GOPROXY: ${GOPROXY:-https://proxy.golang.org,direct}
 
   web:
     build:

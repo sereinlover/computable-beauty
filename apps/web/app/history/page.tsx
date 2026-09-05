@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { Navbar } from "@/components/layout/navbar";
 import { Button } from "@/components/ui/button";
-import { RecentAnalysisList } from "@/components/analyze/history-item";
+import { HistoryComparePanel } from "@/components/history/history-compare-panel";
 import { PageSelect } from "@/components/history/page-select";
 import { fetchJobs } from "@/lib/gateway";
 
@@ -29,7 +29,7 @@ export default async function HistoryPage(props: PageProps<"/history">) {
         }
       />
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
-        <RecentAnalysisList jobs={items} title={tRecent("historyTitle", { total })} />
+        <HistoryComparePanel jobs={items} title={tRecent("historyTitle", { total })} />
 
         {totalPages > 1 && (
           <div className="mt-6 flex items-center justify-center gap-3 text-sm">

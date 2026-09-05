@@ -5,9 +5,9 @@ export function formatDuration(durationSec: number): string {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
-// aesthetic_index and the four dimension scores are stored 0~100, displayed as 0.xx.
+// The four dimension scores are stored and displayed on a 0~100 scale.
 export function formatScore(score0to100: number): string {
-  return (score0to100 / 100).toFixed(2);
+  return Math.round(score0to100).toString();
 }
 
 export function formatAnalysisDuration(durationSec: number | null): string {
@@ -49,12 +49,20 @@ export function toEmotionPercent(key: string, value: number): number {
   return value * 100;
 }
 
-// "D minor" → "Dm", "Bb major" → "Bb" — used to highlight the tonic chord in
+// classifiers/chord.py's roots come from madmom's sharp-only vocabulary, but
+// features/harmonic.py's key (Essentia) can come back flat-spelled ("Bb
+// major"). Without normalizing, "Bb" would never string-match any chord
+// event (all spelled "A#"), silently breaking the tonic highlight for
+// every flat-keyed song.
+const FLAT_TO_SHARP: Record<string, string> = { Db: "C#", Eb: "D#", Gb: "F#", Ab: "G#", Bb: "A#" };
+
+// "D minor" → "Dm", "Bb major" → "A#" — used to highlight the tonic chord in
 // the chord progression, since it's the harmonic "home" the piece keeps
 // returning to (matches the emphasis seen in the product mockup).
 export function getTonicChord(key: string): string {
   const match = key.match(/^([A-G][#b]?)\s*(major|minor)$/i);
   if (!match) return "";
-  const [, root, quality] = match;
+  const [, rawRoot, quality] = match;
+  const root = FLAT_TO_SHARP[rawRoot] ?? rawRoot;
   return quality.toLowerCase() === "minor" ? `${root}m` : root;
 }

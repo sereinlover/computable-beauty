@@ -1,0 +1,4 @@
+musicId,fileName,title,artist,album,duration,chorus_start_time,chorus_end_time
+1,1.mp3,Song A,Artist A,Album A,30.0,00:10,00:40
+2,2.mp3,Song B,Artist B,Album B,25.0,00:05,00:30
+3,3.mp3,Song C,Artist C,Album C,28.0,00:00,00:28

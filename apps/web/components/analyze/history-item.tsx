@@ -3,27 +3,24 @@ import { ArrowRight, Music2 } from "lucide-react";
 import type { Job } from "@contracts/types";
 import { useTranslations } from "next-intl";
 
-import { formatDuration, formatExactTime, formatScore, relativeTimeParts } from "@/lib/format";
+import { formatDuration, formatExactTime, relativeTimeParts } from "@/lib/format";
 
-// Not async, and useTranslations (not getTranslations) — this file is used
-// both from a Server Component (app/history/page.tsx) and directly inside a
-// Client Component's own render (analyze-workspace.tsx's <RecentAnalysisList>
-// isn't passed down as a children prop, it's imported and rendered inline).
-// An async Server Component gets bundled for the client in that second case,
-// and React can't render an async function component on the client at all —
-// useTranslations has a react-server build that works in both contexts.
-export function HistoryItem({ job }: { job: Job }) {
+// Not async / uses useTranslations (not getTranslations): this renders from
+// both a Server Component (app/history/page.tsx) and inline inside a Client
+// Component (analyze-workspace.tsx imports it directly, not via children) —
+// an async Server Component can't render client-side, but useTranslations
+// has a react-server build that works in both.
+//
+// Shared between the plain Link row below and history-compare-panel.tsx's
+// selectable (checkbox) row — same content, different interactive wrapper.
+export function HistoryItemContent({ job }: { job: Job & { result: NonNullable<Job["result"]> } }) {
   const t = useTranslations("Result");
   const tRelative = useTranslations("RelativeTime");
-  if (!job.result) return null;
-  const { feature_summary, understanding, aesthetic } = job.result;
+  const { feature_summary, understanding } = job.result;
   const { unit, value } = relativeTimeParts(job.created_at ?? "");
 
   return (
-    <Link
-      href={`/result/${job.id}`}
-      className="flex items-center gap-4 rounded-xl border border-border px-5 py-4 transition-colors hover:bg-muted/50"
-    >
+    <>
       <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
         <Music2 className="size-4 text-primary" strokeWidth={1.5} />
       </div>
@@ -38,15 +35,23 @@ export function HistoryItem({ job }: { job: Job }) {
           </span>
         </div>
         <p className="text-sm text-muted-foreground">
-          {formatDuration(feature_summary.duration_sec)} · {feature_summary.key} · {understanding.time_signature} ·{" "}
+          {formatDuration(feature_summary.duration_sec)} · {feature_summary.key} · {understanding.signature} ·{" "}
           {Math.round(feature_summary.bpm)} BPM · {tRelative(unit, { value })} ({formatExactTime(job.created_at ?? "")})
         </p>
       </div>
+    </>
+  );
+}
 
-      <div className="shrink-0 text-right">
-        <span className="text-sm text-muted-foreground">{t("aestheticIndex")} </span>
-        <span className="font-semibold text-primary">{formatScore(aesthetic.aesthetic_index)}</span>
-      </div>
+export function HistoryItem({ job }: { job: Job }) {
+  if (!job.result) return null;
+
+  return (
+    <Link
+      href={`/result/${job.id}`}
+      className="flex items-center gap-4 rounded-xl border border-border px-5 py-4 transition-colors hover:bg-muted/50"
+    >
+      <HistoryItemContent job={{ ...job, result: job.result }} />
     </Link>
   );
 }

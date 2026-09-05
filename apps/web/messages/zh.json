@@ -2,8 +2,8 @@
   "LandingPage": {
     "heading1": "音乐的美，",
     "heading2": "可以被计算吗？",
-    "intro1": "真正打动人的音乐，往往同时装下好几层：精确的节奏结构（物理层）、严谨考究的编曲逻辑（结构层）、直面情绪起伏的深度（情感层）、张弛分明的生命张力（生命层）。",
-    "intro2": "Computable Beauty 试图把这种四维美学的直觉翻译成可计算、可验证的维度。",
+    "intro1": "真正打动人的音乐，往往同时装下好几层：精确的节奏结构（物理层）、严谨考究的编曲逻辑（结构层）、直面情绪起伏的深度（情感层）、张弛分明的能量起伏（活力层）。",
+    "intro2": "Computable Beauty 试图把这种四维美学的直觉翻译成可计算的维度。",
     "cta": "开始分析",
     "frameworkLabel": "四维美学框架"
   },
@@ -18,11 +18,11 @@
     },
     "classifying": {
       "label": "多任务语义分类",
-      "detail": "并行推理流派归属、情感效价与唤醒度、乐器构成；同步检测和弦进行、调式与段落边界"
+      "detail": "并行推理流派归属、情感效价与唤醒度、乐器构成；同步检测和弦进行与段落边界"
     },
     "scoring": {
       "label": "四维美学评分",
-      "detail": "基于声学指标与分类结果，量化物理精确性、结构逻辑、情感深度、生命张力四个维度，合成综合美学指数"
+      "detail": "基于声学指标与分类结果，独立量化物理精确性、结构逻辑、情感深度、活力张力四个维度"
     },
     "explaining": {
       "label": "AI 循证解读",
@@ -52,6 +52,7 @@
   },
   "History": {
     "backToAnalyze": "返回分析",
+    "downloadAll": "全部下载",
     "firstPage": "首页",
     "lastPage": "尾页",
     "pageOption": "第 {page} 页"
@@ -61,6 +62,65 @@
     "historyLink": "历史分析",
     "empty": "还没有已完成的分析",
     "historyTitle": "历史分析（共 {total} 条）"
+  },
+  "Compare": {
+    "compareButton": "美学对比",
+    "selectedCount": "已选择 {count} 首",
+    "confirmCompare": "确认对比",
+    "cancelCompare": "取消对比",
+    "limitMessage": "最多对比 20 首歌",
+    "modalTitle": "四维美学对比",
+    "dismiss": "取消展示",
+    "radarTab": "雷达",
+    "trajectoryTab": "走势"
+  },
+  "HistoryExport": {
+    "jobId": "乐曲ID",
+    "title": "曲名",
+    "artist": "艺术家",
+    "createdAt": "上传时间",
+    "analysisDurationSec": "分析耗时（秒）",
+    "durationSec": "时长（秒）",
+    "bpm": "BPM",
+    "tempoStability": "节拍稳定性（秒）",
+    "key": "调性",
+    "dynamicRangeDb": "响度动态范围（dB）",
+    "spectralEntropy": "频谱熵",
+    "silenceRatio": "静音占比",
+    "signature": "拍号",
+    "genre": "风格",
+    "genreConfidence": "风格置信度",
+    "genreTop3": "风格 Top3",
+    "instruments": "乐器",
+    "valence": "效价",
+    "arousal": "唤醒度",
+    "tension": "张力",
+    "release": "释放度",
+    "energy": "能量度",
+    "emotionLabels": "情绪",
+    "physicalPrecision": "物理层",
+    "structuralLogic": "结构层",
+    "emotionalDepth": "情感层",
+    "vitalTension": "活力层",
+    "summary": "AI 总结",
+    "explanation": "AI 解读",
+    "rank": "排名",
+    "genreLabel": "风格名称",
+    "confidence": "置信度",
+    "instrumentName": "乐器名称",
+    "dimension": "维度",
+    "score": "分数",
+    "evidenceKey": "指标名称",
+    "evidenceValue": "指标数值",
+    "timestampSec": "时间戳（秒）",
+    "startSec": "起始时间（秒）",
+    "endSec": "结束时间（秒）",
+    "segmentLabel": "分段类型",
+    "chord": "和弦",
+    "toolName": "工具名称",
+    "toolInput": "输入参数",
+    "toolOutput": "输出结果",
+    "durationMs": "耗时（毫秒）"
   },
   "RelativeTime": {
     "justNow": "刚刚",
@@ -84,9 +144,12 @@
     "aiExplain": "AI 分析"
   },
   "Result": {
-    "aestheticIndex": "美学指数",
     "aestheticDimensions": "美学四维",
+    "aestheticRadarTitle": "四维雷达",
+    "aestheticParallelTitle": "四维走势",
+    "scoreUnit": "分",
     "computationMethod": "计算方式：",
+    "valueRange": "，数值范围：",
     "aiNotConfigured": "尚未配置 OPENAI_API_KEY，该功能不可用",
     "aiInterpretation": "AI 解读",
     "verified": "已校验",
@@ -94,7 +157,7 @@
     "unknownArtist": "未知",
     "duration": "时长",
     "analysisDuration": "分析耗时",
-    "beat": "节拍",
+    "beat": "拍号",
     "key": "调性",
     "instruments": "乐器",
     "genre": "风格",
@@ -102,7 +165,12 @@
     "emotionDimensions": "情感维度",
     "structureSegments": "结构分段",
     "segmentCount": "{count} 段",
+    "chordCount": "{count} 次和弦变化",
+    "distinctChordCount": "{count} 种和弦",
     "chordProgression": "和弦进行",
+    "mainChords": "主要和弦",
+    "mainChordsByFrequency": "主要和弦（按出现频率）",
+    "tonicChordLegend": "深紫 = 调性主音",
     "analysisFailed": "分析失败",
     "retryUploadHint": "请重新上传试试",
     "stillQueued": "还在排队中",
@@ -115,72 +183,109 @@
     "copied": "已复制",
     "shareLink": "分享链接",
     "toolCallCount": "{count} 项工具调用",
-    "emotionArc": "情感弧线 — AROUSAL · VALENCE"
+    "emotionArc": "情感弧线",
+    "emotionHeatmapTitle": "停留时间",
+    "emotionTrajectoryTitle": "情感轨迹",
+    "trajectoryStart": "起点",
+    "trajectoryEnd": "终点",
+    "heatmapLegendLess": "少",
+    "heatmapLegendMore": "多",
+    "heatmapLegendApprox": "约 ",
+    "heatmapLegendSeconds": " 秒"
   },
   "AestheticDimension": {
     "physical_precision": {
       "label": "物理",
       "fullLabel": "物理层",
-      "description": "从节拍稳定性、频谱能量分布、动态范围等信号特征，量化演奏与制作在物理层面的精确程度。"
+      "description": "从节拍稳定性、响度动态范围、频谱分布均匀度三项信号特征，量化演奏与制作在物理层面的精确程度。",
+      "formula": "得分 = (节拍稳定性得分 × 0.4 + 动态范围得分 × 0.3 + 频谱均匀度得分 × 0.3) × 100",
+      "breakdown": "节拍稳定性得分 = 1 − min(节拍稳定性 ÷ 0.13, 1)，节拍稳定性越接近 0 越稳，超过 0.13 秒封顶为 0 分\n动态范围得分 = clamp((响度动态范围 − 5) ÷ 20, 0, 1)，5~25dB 之间线性映射\n频谱均匀度得分 = 1 − clamp(频谱分布标准差 ÷ 25, 0, 1)，标准差越小越均衡"
     },
     "structural_logic": {
       "label": "逻辑",
       "fullLabel": "结构层",
-      "description": "从和声功能的进行方式、段落时长比例、调性稳定性，衡量音乐结构是否构成自洽的整体。"
+      "description": "从和声功能覆盖率、段落时长均衡度、和弦种类丰富度三项信号特征，衡量音乐结构是否构成自洽而不单调的整体。",
+      "formula": "得分 = (T-S-D 覆盖率得分 × 0.3 + 段落均衡度得分 × 0.3 + 和弦丰富度得分 × 0.4) × 100",
+      "breakdown": "T-S-D 覆盖率得分 = T-S-D 覆盖率本身（已经是 0~1 的比例，不用再换算）\n段落均衡度得分 = 1 − clamp(段落时长标准差 ÷ 均值 ÷ 2, 0, 1)，离散程度越小越均衡\n和弦丰富度得分 = clamp(和弦种类数 ÷ 24, 0, 1)，24 是 madmom 全量和弦词表大小"
     },
     "emotional_depth": {
       "label": "情感",
       "fullLabel": "情感层",
-      "description": "从情感弧线的峰谷落差、极性转折次数、唤醒度的离散程度，衡量情绪起伏的完整程度。"
+      "description": "从情感弧线的峰谷落差、唤醒度的离散程度、极性转折频率三项信号特征，衡量情绪起伏的完整程度。",
+      "formula": "得分 = (峰谷落差得分 × 0.4 + 唤醒度离散得分 × 0.3 + 极性转折得分 × 0.3) × 100",
+      "breakdown": "峰谷落差得分 = clamp(峰谷落差 ÷ 1.0, 0, 1)\n唤醒度离散得分 = clamp(唤醒度标准差 ÷ 0.15, 0, 1)\n极性转折得分 = clamp(转折频率 ÷ 0.025, 0, 1)，转折频率是次数换算成的比率，不是原始次数"
     },
     "vital_tension": {
-      "label": "生命",
-      "fullLabel": "生命层",
-      "description": "从响度的动态对比、能量突变的频率、和声不协和音程的比例，衡量对立元素之间的张力强度。"
+      "label": "活力",
+      "fullLabel": "活力层",
+      "description": "从各段落之间响度对比的强弱、节奏爆发的密集程度两项信号特征，衡量音乐能量起伏与驱动的强弱。",
+      "formula": "得分 = (响度对比得分 × 0.5 + 爆发密度得分 × 0.5) × 100",
+      "breakdown": "响度对比得分 = clamp(响度动态对比 ÷ 0.29, 0, 1)\n爆发密度得分 = clamp(能量突变频率 ÷ 310, 0, 1)"
     }
   },
   "EvidenceLabel": {
-    "tempo_stability": "节拍稳定性（BPM 方差，越低越稳）",
-    "frequency_balance": "频谱分布均匀度（低/中/高频能量比，越均衡越高）",
-    "dynamic_range_db": "响度包络变化幅度（RMS 最大值与最小值之差，单位 dB）",
-    "spectral_entropy": "音色复杂度代理（mel 频谱平均信息熵，越高越丰富）",
-    "tsd_coverage": "T-S-D 功能进行覆盖比例（和弦序列分析，越高越合规范）",
-    "segment_balance": "各段时长分布均衡度（结构分段时长，越接近 1 越均衡）",
-    "key_stability": "转调频率与解决情况（调性分析，越高越稳定）",
-    "valence_delta": "情感弧线峰谷落差（弧线最大值与最小值之差）",
-    "polarity_switches": "情绪极性转折密度（相邻帧正负翻转次数）",
-    "arousal_std": "唤醒度离散程度（唤醒度数值的标准差）",
-    "high_arousal_ratio": "高唤醒段落时长比（唤醒度超过 0.6 的片段占比）",
-    "dynamic_contrast": "响度动态对比（RMS 最强段 / 最弱段比值）",
-    "burst_density": "能量突变频率（onset 局部极大值数，次/分钟）",
-    "silence_burst_ratio": "沉默与爆发交替比（静音帧 / 高能帧时长比）",
-    "dissonance_ratio": "谐波张力（和弦不协和音程比例）"
+    "tempo_stability": "节拍稳定性（相邻节拍间隔的标准差，单位秒，越低越稳）",
+    "frequency_balance_std_db": "频谱分布均匀度（低/中/高频段平均能量的标准差，单位 dB，越低越均衡）",
+    "dynamic_range_db": "响度动态范围（95 百分位数与 5 百分位数响度之比，单位 dB，首尾静音已裁剪）",
+    "tsd_coverage": "T-S-D 功能进行覆盖比例（和弦序列中主/下属/属功能出现的比例，越高越合规范）",
+    "segment_balance_ratio": "各段时长均衡度（结构分段时长的变异系数——标准差除以均值，越低越均衡）",
+    "n_distinct_chords": "和弦种类数量（全曲出现的不同和弦数，越多和声越丰富）",
+    "valence_delta": "情感弧线峰谷落差（valence 曲线最大值与最小值之差）",
+    "polarity_switches": "情绪极性转折次数（valence 穿越迟滞带由负转正或由正转负的次数，不是相邻帧简单翻转）",
+    "polarity_switch_rate": "情绪极性转折频率（转折次数换算成的比率，避免长曲目仅因采样点多而占优）",
+    "arousal_std": "唤醒度离散程度（arousal 曲线的标准差）",
+    "dynamic_contrast": "响度动态对比（各结构分段自身平均响度的最大值与最小值之差）",
+    "burst_density": "能量突变频率（onset 强度局部极大值数，次/分钟）"
+  },
+  "EvidenceUnit": {
+    "tempo_stability": "秒",
+    "dynamic_range_db": "dB",
+    "frequency_balance_std_db": "dB",
+    "n_distinct_chords": "个",
+    "polarity_switches": "次",
+    "burst_density": "次/分钟"
   },
   "EmotionDimension": {
     "arousal": {
       "label": "唤醒度（Arousal）",
       "description": "情感的激活强度维度，反映心理生理唤起水平的高低——数值越高，代表越强的生理激活与警觉状态；越低则趋于平静松弛。",
-      "computation": "基于音频的音色、音高、响度、节奏等声学特征，由情感识别模型联合预测得出。"
+      "computation": "用 msd-musicnn 提取 embedding，接一个在 DEAM 数据集上训练的回归头，把模型输出的 1~9 分原始预测线性映射到 0~1。",
+      "formula": "得分 = (原始预测 − 1) ÷ 8",
+      "range": "0 ~ 1"
     },
     "valence": {
       "label": "效价（Valence）",
       "description": "情感的正负极性维度，表征情绪体验的愉悦程度——正值对应积极、愉悦的情感基调，负值对应消极、低落的情感基调，0 为中性。",
-      "computation": "与唤醒度共享同一套声学特征，由同一模型联合预测得出。"
+      "computation": "复用唤醒度所用的同一条 msd-musicnn embedding 流水线，接一个在 DEAM 数据集上训练的回归头，把模型输出的 1~9 分原始预测线性映射到 -1~1。",
+      "formula": "得分 = (原始预测 − 1) ÷ 8 × 2 − 1",
+      "range": "-1 ~ 1"
     },
     "tension": {
       "label": "张力（Tension）",
-      "description": "音乐在时间维度上积累的不稳定感与未解决感——数值越高，听感上越倾向于悬而未决、期待被解决的紧张状态。",
-      "computation": "由情感识别模型的整体输出综合推导，独立的量化方法仍在持续优化中。"
+      "description": "音乐在声音层面的不协和粗糙感（sensory dissonance）——数值越高，代表音高组合产生的物理不协和程度越强，听感上越倾向于悬而未决、期待被解决。",
+      "computation": "对音频逐帧做频谱峰值分析，用感官不协和度算法（Plomp & Levelt, 1965）算出每帧的不协和值，取全曲平均后归一化。",
+      "formula": "得分 = clamp(平均不协和度 ÷ 0.51, 0, 1)",
+      "range": "0 ~ 1"
     },
     "release": {
       "label": "释放度（Release）",
-      "description": "张力得到解决后的稳定感与终止感——数值越高，代表情感张力已充分释放，听感趋于落定与松弛。",
-      "computation": "由情感识别模型的整体输出综合推导，独立的量化方法仍在持续优化中。"
+      "description": "紧张峰值出现后，不协和感被稀释、趋于平息的程度——数值越高，代表峰值之后的下降越明显，听感上越像张力真正得到了释放。",
+      "computation": "在张力所用的同一条逐帧不协和度曲线上找出局部峰值，取峰值之后一小段窗口内的平均降幅并归一化。",
+      "formula": "得分 = clamp(峰值后平均降幅 ÷ 0.147, 0, 1)",
+      "range": "0 ~ 1"
     },
     "energy": {
       "label": "能量度（Energy）",
-      "description": "音乐整体的驱动力与强度，综合反映节奏密度、力度与音色的复合作用——数值越高，代表越强的动能与冲击力。",
-      "computation": "由情感识别模型的整体输出综合推导，独立的量化方法仍在持续优化中。"
+      "description": "音乐整体的驱动力与冲击力，由响度和节奏密度共同决定——数值越高，代表能量段落越响、鼓点与攻击越密集。",
+      "computation": "响度取全曲 RMS 的 90 百分位数，节奏密度取 onset 强度局部峰值的出现频率，两者各占一半权重。",
+      "formula": "得分 = 响度得分 × 0.5 + 爆发密度得分 × 0.5\n响度得分 = clamp(RMS 90 百分位数 ÷ 0.50, 0, 1)\n爆发密度得分 = clamp(能量突变频率 ÷ 310, 0, 1)",
+      "range": "0 ~ 1"
     }
+  },
+  "EmotionQuadrant": {
+    "positiveHighArousal": "兴奋/喜悦",
+    "positiveLowArousal": "满足/宁静",
+    "negativeHighArousal": "悲痛/愤怒",
+    "negativeLowArousal": "忧郁/平静"
   }
 }

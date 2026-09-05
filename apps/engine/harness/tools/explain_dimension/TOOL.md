@@ -86,7 +86,7 @@ Check each item after every implementation change:
 - [ ] Raises `ValueError` when `evidence` is missing, empty, or not an object
 - [ ] Raises `ValueError` when `explanation` is an empty string
 - [ ] Returns `{"explanation": ...}` unchanged on valid input, no text rewriting
-- [ ] `apps/engine/tests/test_explain_dimension.py` passes in full
+- [ ] `apps/engine/tests/harness/test_explain_dimension.py` passes in full
 
 ---
 
@@ -103,5 +103,5 @@ Check each item after every implementation change:
 apps/engine/harness/tools/explain_dimension/TOOL.md              # this file (contract doc)
 apps/engine/harness/tools/explain_dimension/explain_dimension.py # implementation function
 apps/engine/harness/registry.py                                  # registry entry (mount point)
-apps/engine/tests/test_explain_dimension.py                      # unit tests
+apps/engine/tests/harness/test_explain_dimension.py               # unit tests
 ```

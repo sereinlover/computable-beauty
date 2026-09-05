@@ -62,11 +62,11 @@ var sseStepInfo = map[contracts.JobStatus]struct {
 	Message  string
 	Progress float64
 }{
-	contracts.JobStatusExtracting:     {"Extracting audio features...", 0.2},
-	contracts.JobStatusClassifying:    {"Classifying genre and emotion...", 0.5},
-	contracts.JobStatusScoring:        {"Scoring aesthetics...", 0.8},
-	contracts.JobStatusExplaining:     {"Generating explanation...", 0.9},
-	contracts.JobStatusExplainSkipped: {"Skipping AI explanation (no API key configured)...", 0.9},
+	contracts.JobStatusExtracting:     {"Extracting audio features...", 0.05},
+	contracts.JobStatusClassifying:    {"Classifying genre and emotion...", 0.10},
+	contracts.JobStatusScoring:        {"Scoring aesthetics...", 0.70},
+	contracts.JobStatusExplaining:     {"Generating explanation...", 0.80},
+	contracts.JobStatusExplainSkipped: {"Skipping AI explanation (no API key configured)...", 0.80},
 }
 
 // handleJobStream handles GET /api/jobs/{id}/stream: polls the cached job

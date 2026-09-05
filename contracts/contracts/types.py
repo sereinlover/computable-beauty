@@ -55,7 +55,7 @@ class FeatureBundle:
 class EmotionPoint:
     timestamp_sec: float
     valence: float  # -1.0 ~ 1.0
-    arousal: float  # -1.0 ~ 1.0
+    arousal: float  # 0.0 ~ 1.0
 
 
 @dataclass
@@ -100,7 +100,7 @@ class UnderstandingBundle:
     energy: float                    # overall energy level, 0~1
     emotion_arc: list[EmotionPoint]  # frame-level arc
 
-    time_signature: str  # e.g. "4/4", "3/4"
+    signature: str  # e.g. "4/4", "3/4"
 
     instruments: list[InstrumentEntry]
 
@@ -118,15 +118,16 @@ class DimensionScore:
 
 @dataclass
 class AestheticBundle:
+    """Four independent dimensions, deliberately with no combined score —
+    beauty isn't a single scalar, collapsing it into one number hides more
+    than it reveals."""
+
     audio_id: str
 
     physical_precision: DimensionScore
     structural_logic: DimensionScore
     emotional_depth: DimensionScore
     vital_tension: DimensionScore
-
-    aesthetic_index: float     # 0 ~ 100
-    weights: dict[str, float]  # per-dimension weights, exposed for UI transparency
 
 
 # ─── L4 output ────────────────────────────────────────────────────────────────

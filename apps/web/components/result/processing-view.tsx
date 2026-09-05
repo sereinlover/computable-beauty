@@ -7,6 +7,7 @@ import { Check, Circle, CircleMinus, Loader2 } from "lucide-react";
 
 import type { Job, JobStatus, SSEEvent } from "@contracts/types";
 import { Progress } from "@/components/ui/progress";
+import { useAnimatedProgress } from "@/lib/use-animated-progress";
 
 // Same four steps and order as apps/gateway/internal/server/sse.go's
 // sseStepInfo — Gateway's own step messages are English, apps/web owns the
@@ -26,6 +27,7 @@ export function ProcessingView({ job }: { job: Job }) {
   const [failed, setFailed] = useState(job.status === "failed");
   const [timedOut, setTimedOut] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
+  const animatedProgress = useAnimatedProgress(step, progress);
 
   useEffect(() => {
     if (job.status === "done" || job.status === "failed") return;
@@ -98,7 +100,7 @@ export function ProcessingView({ job }: { job: Job }) {
         {currentIndex === -1 ? t("queuedWaiting") : t("uploadedWaitEstimate")}
       </p>
 
-      <Progress value={progress * 100} className="mt-6" />
+      <Progress value={animatedProgress * 100} className="mt-6" />
 
       <ul className="mt-6 space-y-3 text-left">
         {STEP_ORDER.map((s, i) => {

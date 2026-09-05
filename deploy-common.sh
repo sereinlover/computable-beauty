@@ -137,6 +137,24 @@ if [ "$NEW_MODEL" != "${OPENAI_MODEL:-}" ]; then
 fi
 OPENAI_MODEL="$NEW_MODEL"
 
+# --- China mirrors (build-from-source only) ----------------------------
+# deploy-pull.sh never sets NEEDS_MIRROR_PROMPT — it pulls prebuilt images,
+# there's nothing to build, so the question doesn't apply.
+GOPROXY="https://proxy.golang.org,direct"
+APT_MIRROR=""
+GIT_HTTP1="false"
+UV_INDEX="https://pypi.org/simple"
+if [ "${NEEDS_MIRROR_PROMPT:-0}" = 1 ]; then
+  read -rp "Building from mainland China? Use China mirrors for go/apt/pypi/git to dodge network issues? [y/N] " USE_CHINA_MIRROR
+  if [[ "$USE_CHINA_MIRROR" =~ ^[Yy]$ ]]; then
+    GOPROXY="https://goproxy.cn,direct"
+    APT_MIRROR="mirrors.tuna.tsinghua.edu.cn"
+    GIT_HTTP1="true"
+    UV_INDEX="https://pypi.tuna.tsinghua.edu.cn/simple"
+  fi
+fi
+export GOPROXY APT_MIRROR GIT_HTTP1 UV_INDEX
+
 # --- from here on, mirror everything to a log file too ----------------
 LOG_DIR="$REPO_ROOT/logs"
 mkdir -p "$LOG_DIR"

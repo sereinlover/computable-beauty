@@ -12,10 +12,11 @@ import (
 	"github.com/computable-beauty/gateway/internal/biz"
 )
 
-// engineRequestTimeout bounds every /internal/* call. /internal/explain runs a
-// real LLM tool-use loop and is much slower than the other three
-// pure-computation endpoints, so one generous timeout covers all of them.
-const engineRequestTimeout = 5 * time.Minute
+// engineRequestTimeout bounds every /internal/* call — generous because
+// /internal/explain runs a real LLM tool-use loop, much slower than the
+// other three. Kept above harness/orchestrator.py's own OpenAI timeout (8
+// minutes) so a slow LLM call fails on the Engine side first, not here.
+const engineRequestTimeout = 10 * time.Minute
 
 // HTTPEngineClient implements biz.EngineClient over HTTP against apps/engine's
 // /internal/* endpoints.
@@ -113,7 +114,7 @@ func (c *HTTPEngineClient) post(ctx context.Context, path string, reqBody, respB
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("failed to call %s: %w", path, err)
+		return fmt.Errorf("failed to call %s: %w: %w", path, biz.ErrEngineUnreachable, err)
 	}
 	defer func() { _ = resp.Body.Close() }()
 

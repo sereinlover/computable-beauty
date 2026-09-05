@@ -21,14 +21,20 @@ apps/engine/.pytest_cache/
 apps/engine/.mypy_cache/
 apps/engine/.ruff_cache/
 
+# apps/engine — scratch Jupyter notebooks for interactively exploring
+# feature-extraction output; personal exploration, not part of the codebase.
+apps/engine/notebooks/
+
+# apps/engine — pretrained model weights, downloaded via `make models`.
+apps/engine/classifiers/models/
+
 # apps/gateway — Go
 apps/gateway/bin/
 apps/gateway/*.exe
 apps/gateway/*.test
 
-# Uploaded audio Gateway writes to disk in local dev (matches the /data/uploads
-# shared volume used in the containerized deployment).
-/data/uploads/
+# Uploaded audio, training datasets — large, local-only.
+/data/
 
 # apps/web — Next.js / Node
 apps/web/node_modules/

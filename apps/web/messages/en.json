@@ -2,8 +2,8 @@
   "LandingPage": {
     "heading1": "Can the beauty of music ",
     "heading2": "be computed?",
-    "intro1": "Music that truly moves people usually carries several layers at once: precise rhythmic structure (the physical layer), rigorously considered arrangement logic (the structural layer), depth that confronts emotional ups and downs (the emotional layer), and dynamic tension held in balance (the vital layer).",
-    "intro2": "Computable Beauty tries to translate this four-dimensional aesthetic intuition into computable, verifiable dimensions.",
+    "intro1": "Music that truly moves people usually carries several layers at once: precise rhythmic structure (the physical layer), rigorously considered arrangement logic (the structural layer), depth that confronts emotional ups and downs (the emotional layer), and energy that rises and falls in balance (the vitality layer).",
+    "intro2": "Computable Beauty tries to translate this four-dimensional aesthetic intuition into computable dimensions.",
     "cta": "Start Analyzing",
     "frameworkLabel": "Four-Dimensional Aesthetic Framework"
   },
@@ -18,11 +18,11 @@
     },
     "classifying": {
       "label": "Multi-Task Semantic Classification",
-      "detail": "Infers genre, valence/arousal, and instrumentation in parallel, while detecting chord progressions, key, and section boundaries"
+      "detail": "Infers genre, valence/arousal, and instrumentation in parallel, while detecting chord progressions and section boundaries"
     },
     "scoring": {
       "label": "Four-Dimensional Aesthetic Scoring",
-      "detail": "Quantifies physical precision, structural logic, emotional depth, and vital tension based on the acoustic and classification results, combining them into an overall aesthetic index"
+      "detail": "Independently quantifies physical precision, structural logic, emotional depth, and vital tension based on the acoustic and classification results"
     },
     "explaining": {
       "label": "AI Evidence-Based Interpretation",
@@ -52,6 +52,7 @@
   },
   "History": {
     "backToAnalyze": "Back to Analyze",
+    "downloadAll": "Download All",
     "firstPage": "First",
     "lastPage": "Last",
     "pageOption": "Page {page}"
@@ -61,6 +62,65 @@
     "historyLink": "History",
     "empty": "No completed analyses yet",
     "historyTitle": "History ({total} total)"
+  },
+  "Compare": {
+    "compareButton": "Compare Aesthetics",
+    "selectedCount": "{count} selected",
+    "confirmCompare": "Confirm",
+    "cancelCompare": "Cancel",
+    "limitMessage": "Up to 20 songs",
+    "modalTitle": "4D Aesthetic Comparison",
+    "dismiss": "Close",
+    "radarTab": "Radar",
+    "trajectoryTab": "Trend"
+  },
+  "HistoryExport": {
+    "jobId": "Song ID",
+    "title": "Song Title",
+    "artist": "Artist",
+    "createdAt": "Uploaded At",
+    "analysisDurationSec": "Analysis Time (sec)",
+    "durationSec": "Duration (sec)",
+    "bpm": "BPM",
+    "tempoStability": "Tempo Stability (sec)",
+    "key": "Key",
+    "dynamicRangeDb": "Dynamic Range (dB)",
+    "spectralEntropy": "Spectral Entropy",
+    "silenceRatio": "Silence Ratio",
+    "signature": "Signature",
+    "genre": "Genre",
+    "genreConfidence": "Genre Confidence",
+    "genreTop3": "Top 3 Genres",
+    "instruments": "Instruments",
+    "valence": "Valence",
+    "arousal": "Arousal",
+    "tension": "Tension",
+    "release": "Release",
+    "energy": "Energy",
+    "emotionLabels": "Mood",
+    "physicalPrecision": "Physical Layer",
+    "structuralLogic": "Structural Layer",
+    "emotionalDepth": "Emotional Layer",
+    "vitalTension": "Vitality Layer",
+    "summary": "AI Summary",
+    "explanation": "AI Interpretation",
+    "rank": "Rank",
+    "genreLabel": "Genre Label",
+    "confidence": "Confidence",
+    "instrumentName": "Instrument Name",
+    "dimension": "Dimension",
+    "score": "Score",
+    "evidenceKey": "Evidence Key",
+    "evidenceValue": "Evidence Value",
+    "timestampSec": "Timestamp (sec)",
+    "startSec": "Start Time (sec)",
+    "endSec": "End Time (sec)",
+    "segmentLabel": "Segment Type",
+    "chord": "Chord",
+    "toolName": "Tool Name",
+    "toolInput": "Input",
+    "toolOutput": "Output",
+    "durationMs": "Duration (ms)"
   },
   "RelativeTime": {
     "justNow": "just now",
@@ -84,9 +144,12 @@
     "aiExplain": "AI Analysis"
   },
   "Result": {
-    "aestheticIndex": "Aesthetic Index",
     "aestheticDimensions": "Aesthetic Dimensions",
+    "aestheticRadarTitle": "Four-Dimension Radar",
+    "aestheticParallelTitle": "Four-Dimension Trend",
+    "scoreUnit": " pts",
     "computationMethod": "How it's computed: ",
+    "valueRange": "; value range: ",
     "aiNotConfigured": "OPENAI_API_KEY is not configured — this feature is unavailable",
     "aiInterpretation": "AI Interpretation",
     "verified": "Verified",
@@ -94,7 +157,7 @@
     "unknownArtist": "Unknown",
     "duration": "Duration",
     "analysisDuration": "Analysis Time",
-    "beat": "Time Signature",
+    "beat": "Signature",
     "key": "Key",
     "instruments": "Instruments",
     "genre": "Genre",
@@ -102,7 +165,12 @@
     "emotionDimensions": "Emotion Dimensions",
     "structureSegments": "Structure Segments",
     "segmentCount": "{count} segments",
+    "chordCount": "{count} chord changes",
+    "distinctChordCount": "{count} chord types",
     "chordProgression": "Chord Progression",
+    "mainChords": "Main Chords",
+    "mainChordsByFrequency": "Main Chords (by Frequency)",
+    "tonicChordLegend": "Dark purple = tonic chord",
     "analysisFailed": "Analysis Failed",
     "retryUploadHint": "Please try uploading again",
     "stillQueued": "Still Queued",
@@ -115,72 +183,109 @@
     "copied": "Copied",
     "shareLink": "Share Link",
     "toolCallCount": "{count, plural, one {# tool call} other {# tool calls}}",
-    "emotionArc": "Emotional Arc — AROUSAL · VALENCE"
+    "emotionArc": "Emotional Arc",
+    "emotionHeatmapTitle": "Dwell Time",
+    "emotionTrajectoryTitle": "Emotional Trajectory",
+    "trajectoryStart": "Start",
+    "trajectoryEnd": "End",
+    "heatmapLegendLess": "Less",
+    "heatmapLegendMore": "More",
+    "heatmapLegendApprox": "~",
+    "heatmapLegendSeconds": "s"
   },
   "AestheticDimension": {
     "physical_precision": {
       "label": "Physical",
       "fullLabel": "Physical Layer",
-      "description": "Quantifies the physical precision of performance and production from signal features like tempo stability, spectral energy distribution, and dynamic range."
+      "description": "Quantifies the physical precision of performance and production from tempo stability, dynamic range, and spectral balance.",
+      "formula": "score = (tempo stability score × 0.4 + dynamic range score × 0.3 + spectral balance score × 0.3) × 100",
+      "breakdown": "tempo stability score = 1 − min(tempo stability ÷ 0.13, 1); closer to 0 is more stable, caps at 0 past 0.13s\ndynamic range score = clamp((dynamic range − 5) ÷ 20, 0, 1); linear between 5-25dB\nspectral balance score = 1 − clamp(spectral std ÷ 25, 0, 1); a smaller std is more balanced"
     },
     "structural_logic": {
       "label": "Logic",
       "fullLabel": "Structural Layer",
-      "description": "Measures whether the music's structure forms a coherent whole, based on harmonic progression patterns, section duration ratios, and tonal stability."
+      "description": "Measures whether the music's structure forms a coherent, non-repetitive whole from T-S-D function coverage, section duration balance, and chord vocabulary richness.",
+      "formula": "score = (T-S-D coverage score × 0.3 + section balance score × 0.3 + chord richness score × 0.4) × 100",
+      "breakdown": "T-S-D coverage score = T-S-D coverage itself (already a 0-1 ratio, no rescaling)\nsection balance score = 1 − clamp(section duration std ÷ mean ÷ 2, 0, 1); less dispersion is more balanced\nchord richness score = clamp(distinct chord count ÷ 24, 0, 1); 24 is madmom's full chord vocabulary size"
     },
     "emotional_depth": {
       "label": "Emotion",
       "fullLabel": "Emotional Layer",
-      "description": "Measures the completeness of emotional movement from the peak-to-valley range of the emotional arc, the number of polarity shifts, and the dispersion of arousal."
+      "description": "Measures the completeness of emotional movement from the valence arc's peak-to-valley range, arousal dispersion, and polarity shift rate.",
+      "formula": "score = (valence range score × 0.4 + arousal dispersion score × 0.3 + polarity shift score × 0.3) × 100",
+      "breakdown": "valence range score = clamp(valence range ÷ 1.0, 0, 1)\narousal dispersion score = clamp(arousal std ÷ 0.15, 0, 1)\npolarity shift score = clamp(shift rate ÷ 0.025, 0, 1); a rate, not the raw shift count"
     },
     "vital_tension": {
       "label": "Vitality",
-      "fullLabel": "Vital Layer",
-      "description": "Measures the intensity of tension between opposing elements from loudness dynamic contrast, the frequency of energy shifts, and the proportion of dissonant harmonic intervals."
+      "fullLabel": "Vitality Layer",
+      "description": "Measures how strongly the music's energy rises, falls, and drives forward, from loudness contrast across structural sections and rhythmic burst density.",
+      "formula": "score = (loudness contrast score × 0.5 + burst density score × 0.5) × 100",
+      "breakdown": "loudness contrast score = clamp(loudness contrast ÷ 0.29, 0, 1)\nburst density score = clamp(burst density ÷ 310, 0, 1)"
     }
   },
   "EvidenceLabel": {
-    "tempo_stability": "Tempo Stability (BPM variance, lower = more stable)",
-    "frequency_balance": "Spectral Balance (low/mid/high frequency energy ratio, more balanced = higher)",
-    "dynamic_range_db": "Loudness Envelope Range (difference between max and min RMS, in dB)",
-    "spectral_entropy": "Timbre Complexity Proxy (mean entropy of the mel spectrogram, higher = richer)",
-    "tsd_coverage": "T-S-D Function Coverage (chord sequence analysis, higher = more conventional)",
-    "segment_balance": "Section Duration Balance (structural segment durations, closer to 1 = more balanced)",
-    "key_stability": "Key Change Frequency & Resolution (tonal analysis, higher = more stable)",
-    "valence_delta": "Emotional Arc Range (difference between the arc's max and min)",
-    "polarity_switches": "Emotional Polarity Shift Density (positive/negative flips between adjacent frames)",
-    "arousal_std": "Arousal Dispersion (standard deviation of arousal values)",
-    "high_arousal_ratio": "High-Arousal Duration Ratio (share of segments with arousal above 0.6)",
-    "dynamic_contrast": "Loudness Dynamic Contrast (ratio of the loudest to the quietest section's RMS)",
-    "burst_density": "Energy Burst Frequency (number of local onset-strength maxima, per minute)",
-    "silence_burst_ratio": "Silence-to-Burst Ratio (silent frame duration vs. high-energy frame duration)",
-    "dissonance_ratio": "Harmonic Tension (proportion of dissonant chord intervals)"
+    "tempo_stability": "Tempo Stability (standard deviation of inter-beat intervals, in seconds, lower = more stable)",
+    "frequency_balance_std_db": "Spectral Balance (standard deviation of mean energy across low/mid/high bands, in dB, lower = more balanced)",
+    "dynamic_range_db": "Dynamic Range (95th vs. 5th percentile loudness ratio, in dB, with silent edges trimmed)",
+    "tsd_coverage": "T-S-D Function Coverage (share of chord events that are a tonic/subdominant/dominant function, higher = more conventional)",
+    "segment_balance_ratio": "Section Duration Balance (coefficient of variation of segment durations — standard deviation over mean, lower = more balanced)",
+    "n_distinct_chords": "Chord Vocabulary Size (number of distinct chords across the track, more = richer harmony)",
+    "valence_delta": "Emotional Arc Range (difference between the valence arc's max and min)",
+    "polarity_switches": "Emotional Polarity Shifts (count of hysteresis-band crossings from negative to positive or back, not raw adjacent-frame flips)",
+    "polarity_switch_rate": "Emotional Polarity Shift Rate (shift count normalized by arc length, so longer tracks aren't favored just for having more sample points)",
+    "arousal_std": "Arousal Dispersion (standard deviation of the arousal arc)",
+    "dynamic_contrast": "Loudness Dynamic Contrast (difference between the loudest and quietest structural section's own mean loudness)",
+    "burst_density": "Energy Burst Frequency (number of local onset-strength maxima, per minute)"
+  },
+  "EvidenceUnit": {
+    "tempo_stability": "s",
+    "dynamic_range_db": "dB",
+    "frequency_balance_std_db": "dB",
+    "n_distinct_chords": "chords",
+    "polarity_switches": "times",
+    "burst_density": "times/min"
   },
   "EmotionDimension": {
     "arousal": {
       "label": "Arousal",
       "description": "The activation intensity dimension of emotion, reflecting the level of psychophysiological arousal — higher values indicate stronger physiological activation and alertness; lower values trend toward calm and relaxed.",
-      "computation": "Jointly predicted by the emotion recognition model from acoustic features such as timbre, pitch, loudness, and rhythm."
+      "computation": "Extracts an embedding with msd-musicnn, feeding a regression head trained on the DEAM dataset, then linearly rescales the model's 1-9 raw prediction to 0~1.",
+      "formula": "arousal = (raw prediction − 1) ÷ 8",
+      "range": "0 ~ 1"
     },
     "valence": {
       "label": "Valence",
       "description": "The positive/negative polarity dimension of emotion, representing how pleasant the emotional experience is — positive values correspond to a positive, pleasant emotional tone, negative values to a negative, low tone, with 0 being neutral.",
-      "computation": "Shares the same acoustic features as arousal, jointly predicted by the same model."
+      "computation": "Reuses the same msd-musicnn embedding pipeline as arousal, feeding a regression head trained on the DEAM dataset, then linearly rescales the model's 1-9 raw prediction to -1~1.",
+      "formula": "valence = (raw prediction − 1) ÷ 8 × 2 − 1",
+      "range": "-1 ~ 1"
     },
     "tension": {
       "label": "Tension",
-      "description": "The sense of instability and unresolvedness the music accumulates over time — higher values sound more suspended, anticipating resolution.",
-      "computation": "Derived from the overall output of the emotion recognition model; a standalone quantification method is still being refined."
+      "description": "The sensory dissonance (roughness) of the music's sound itself — higher values mean the pitch combinations are more physically dissonant, sounding more suspended and in need of resolution.",
+      "computation": "Computed frame-by-frame from spectral peaks using a sensory dissonance algorithm (Plomp & Levelt, 1965), averaged across the track and normalized.",
+      "formula": "tension = clamp(mean dissonance ÷ 0.51, 0, 1)",
+      "range": "0 ~ 1"
     },
     "release": {
       "label": "Release",
-      "description": "The sense of stability and closure once tension resolves — higher values indicate tension has been fully released, sounding settled and relaxed.",
-      "computation": "Derived from the overall output of the emotion recognition model; a standalone quantification method is still being refined."
+      "description": "How much the dissonance settles down right after a tension peak — higher values mean a sharper drop following the peak, sounding more like the tension has actually been released.",
+      "computation": "Finds local peaks on the same frame-level dissonance curve used for tension, averages the drop in a short window right after each peak, then normalizes.",
+      "formula": "release = clamp(mean post-peak drop ÷ 0.147, 0, 1)",
+      "range": "0 ~ 1"
     },
     "energy": {
       "label": "Energy",
-      "description": "The overall drive and intensity of the music, jointly reflecting rhythmic density, dynamics, and timbre — higher values indicate stronger momentum and impact.",
-      "computation": "Derived from the overall output of the emotion recognition model; a standalone quantification method is still being refined."
+      "description": "The overall drive and impact of the music, driven jointly by loudness and rhythmic density — higher values mean louder energetic passages and denser hits and attacks.",
+      "computation": "Loudness is the 90th percentile of the track's RMS, rhythmic density is the frequency of local onset-strength peaks, the two are weighted equally.",
+      "formula": "energy = loudness score × 0.5 + burst density score × 0.5\nloudness score = clamp(RMS 90th percentile ÷ 0.50, 0, 1)\nburst density score = clamp(burst density ÷ 310, 0, 1)",
+      "range": "0 ~ 1"
     }
+  },
+  "EmotionQuadrant": {
+    "positiveHighArousal": "Excited / Joyful",
+    "positiveLowArousal": "Content / Serene",
+    "negativeHighArousal": "Grief / Anger",
+    "negativeLowArousal": "Melancholy / Calm"
   }
 }

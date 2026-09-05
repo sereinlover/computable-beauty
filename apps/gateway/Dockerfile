@@ -4,9 +4,12 @@
 FROM golang:1.26-alpine AS build
 WORKDIR /src
 
-# In mainland China, proxy.golang.org can be unreachable — uncomment to use
-# a China mirror instead.
-# ENV GOPROXY="https://goproxy.cn,direct"
+# In mainland China, proxy.golang.org can be unreachable — deploy-build.sh's
+# China-mirror prompt passes GOPROXY=https://goproxy.cn,direct as a build
+# arg here; the default below matches Go's own default, so a plain
+# `docker build`/`docker compose build` behaves the same as before.
+ARG GOPROXY="https://proxy.golang.org,direct"
+ENV GOPROXY=${GOPROXY}
 
 # contracts/ first, then gateway's go.mod/go.sum, so `go mod download`
 # layer-caches independently of application source changes.

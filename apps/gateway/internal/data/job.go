@@ -70,6 +70,33 @@ func (r *JobPostgresStore) NextJob(ctx context.Context) (biz.JobRecord, bool, er
 	return job, true, nil
 }
 
+// RequeueStuckJobs resets every status=processing row back to pending — see
+// biz.JobStore's doc comment for why any such row at process startup must be
+// an orphan from a previous run. RETURNING title lets the caller log which
+// tracks were affected, not just how many.
+func (r *JobPostgresStore) RequeueStuckJobs(ctx context.Context) ([]string, error) {
+	rows, err := r.pool.Query(ctx, `
+		UPDATE jobs SET status = $1 WHERE status = $2 RETURNING title
+	`, contracts.JobStatusPending, contracts.JobStatusProcessing)
+	if err != nil {
+		return nil, fmt.Errorf("failed to requeue stuck jobs: %w", err)
+	}
+	defer rows.Close()
+
+	titles := []string{}
+	for rows.Next() {
+		var title string
+		if err := rows.Scan(&title); err != nil {
+			return nil, fmt.Errorf("failed to scan requeued job title: %w", err)
+		}
+		titles = append(titles, title)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("failed to requeue stuck jobs: %w", err)
+	}
+	return titles, nil
+}
+
 // UpdateJob updates a job's status; durationSec only matters for
 // status=done, errMsg only for status=failed.
 func (r *JobPostgresStore) UpdateJob(ctx context.Context, jobID string, status contracts.JobStatus, errMsg string, durationSec *float64) error {
@@ -212,7 +239,11 @@ func scanJobRow(row scanRow) (*contracts.Job, error) {
 		job.Error = *errMsg
 	}
 	job.AnalysisDurationSec = duration
-	job.CreatedAt = createdAt.UTC().Format(time.RFC3339)
+	// RFC3339Nano, not RFC3339 — plain RFC3339 truncates to whole seconds,
+	// collapsing same-second job bursts (e.g. a batch upload) to identical
+	// timestamps. apps/web sorts by this field for FIFO order, so ties would
+	// fall back to this query's DESC row order and silently reverse the display.
+	job.CreatedAt = createdAt.UTC().Format(time.RFC3339Nano)
 	if resultJSON != nil {
 		var result contracts.AnalysisResult
 		if err := json.Unmarshal(resultJSON, &result); err != nil {

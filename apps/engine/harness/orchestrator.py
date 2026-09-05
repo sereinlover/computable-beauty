@@ -42,6 +42,11 @@ logger = logging.getLogger(__name__)
 # HasOpenAIKey check).
 _client: OpenAI | None = None
 
+# Kept below gateway/internal/data/engine_client.go's engineRequestTimeout (10
+# minutes) so a slow LLM call fails here first, instead of Gateway cutting the
+# connection while this call is still running unattended.
+_LLM_TIMEOUT_SECONDS = 8 * 60
+
 
 def _get_client() -> OpenAI:
     global _client
@@ -50,6 +55,7 @@ def _get_client() -> OpenAI:
         client = OpenAI(
             api_key=os.environ["OPENAI_API_KEY"],
             base_url=os.environ["OPENAI_BASE_URL"],
+            timeout=_LLM_TIMEOUT_SECONDS,
         )
         _client = client
     return client
@@ -62,15 +68,16 @@ DIMENSION_ORDER = ["physical_precision", "structural_logic", "emotional_depth", 
 EXPLAIN_MAX_TOKENS = 2048
 CHAT_MAX_TOKENS = 1024
 
-# Per-language display labels for the explanation heading in run_explain —
-# dimension_explanations[dim] is already in the target language (LLM-written),
-# but the heading itself isn't LLM output, so it needs its own translation.
+# Per-language display labels — fed into run_explain's system prompt so the
+# LLM has one canonical name per dimension to copy, instead of inventing its
+# own translation of the raw field name (and drifting between synonyms)
+# each time it's mentioned; also reused verbatim for the heading below.
 DIMENSION_LABELS = {
     "zh": {
         "physical_precision": "物理精确性",
         "structural_logic": "结构逻辑",
         "emotional_depth": "情感深度",
-        "vital_tension": "生命张力",
+        "vital_tension": "活力张力",
     },
     "en": {
         "physical_precision": "Physical Precision",
@@ -122,7 +129,12 @@ def run_explain(
     aesthetic: AestheticBundle,
 ) -> AnalysisResult:
     language_name = LANGUAGE_NAMES.get(language, LANGUAGE_NAMES["en"])
-    system_prompt = EXPLAIN_SYSTEM_PROMPT + f"\n\nAlways write summary and explanation in {language_name}. Do not mix languages."
+    labels = DIMENSION_LABELS.get(language, DIMENSION_LABELS["en"])
+    dimension_names = ", ".join(f'{dim}="{labels[dim]}"' for dim in DIMENSION_ORDER)
+    system_prompt = (
+        EXPLAIN_SYSTEM_PROMPT + f"\n\nAlways write summary and explanation in {language_name}. Do not mix languages. "
+        f"Refer to each dimension by exactly this name, verbatim, every time it's mentioned: {dimension_names}."
+    )
 
     tools = _openai_tools()
     messages: list[ChatCompletionMessageParam] = [
@@ -216,7 +228,6 @@ def run_explain(
         len(tool_call_log),
     )
 
-    labels = DIMENSION_LABELS.get(language, DIMENSION_LABELS["en"])
     explanation = "\n\n".join(
         f"**{labels[dim]} ({dimension_scores[dim]:.0f})**\n{dimension_explanations[dim]}"
         for dim in DIMENSION_ORDER
